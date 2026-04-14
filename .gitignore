@@ -1,0 +1,33 @@
+# Python standard
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+
+# Environment
+.env
+
+# Models & Data
+models/*.pkl
+models/*.h5
+models/*.joblib
+!models/.gitkeep
+datasets/*.zip
+uploads/*
+
+# System
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project specific
+node_modules/
+dist/
+build/

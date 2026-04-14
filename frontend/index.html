@@ -3,169 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LifeLensAI - Multi-Disease Prediction</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>LifeLensAI - Healthcare Intelligence Platform</title>
   <link rel="stylesheet" href="css/index.css">
-  <link rel="stylesheet" href="css/dashboard.css">
+  <style>
+    .hero-section { min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .hero-title { font-size: 4.5rem; line-height: 1.1; margin-bottom: 2rem; letter-spacing: -2px; }
+    .hero-subtitle { max-width: 600px; margin-bottom: 3rem; font-size: 1.25rem; }
+  </style>
 </head>
 <body>
 
-  <div class="container animate-fade-in">
-    <header>
-      <div class="logo-container">
-        <span class="logo-icon">🧬</span>
-        <h1 class="title-primary text-gradient">LifeLensAI</h1>
+  <header class="main-header"></header>
+
+  <main class="container">
+    <div class="hero-section animate-slide-up">
+      <div style="padding: 10px 20px; background: var(--secondary-pink); border-radius: 100px; color: var(--primary-crimson); font-weight: 600; font-size: 0.85rem; margin-bottom: 2rem; border: 1px solid var(--primary-pink);">
+        ✨ Now Powered by Google Gemini AI
       </div>
-      <p class="subtitle">AI-Based Multi-Disease Prediction and Personalized Health Intelligence Platform</p>
-    </header>
+      <h1 class="hero-title">Predictive Health.<br><span class="text-gradient">Redefined for You.</span></h1>
+      <p class="hero-subtitle subtitle">Connect your clinical metrics to a world-class AI intelligence engine. Get doctor-level insights, dynamic routines, and proactive monitoring plans.</p>
+      
+      <div class="flex gap-4">
+        <a href="register.html" class="btn btn-primary" style="padding: 1rem 2rem;">Get Started Free</a>
+        <a href="login.html" class="btn btn-outline" style="padding: 1rem 2rem;">Sign In</a>
+      </div>
 
-    <main class="dashboard-grid">
-      <!-- Input Sidebar -->
-      <aside class="input-sidebar glass-card">
-        
-        <div class="upload-zone" id="drop-zone">
-          <div class="upload-icon">📄</div>
-          <div class="upload-text">Upload Medical PDF</div>
-          <div class="upload-sub">Drag & Drop or Click to Auto-Fill</div>
-          <input type="file" id="pdf-upload" accept="application/pdf" class="hidden">
-        </div>
+      <div class="flex gap-12 mt-12" style="opacity: 0.6;">
+        <div class="flex items-center gap-2"><span>🛡️</span> HIPAA Compliant Privacy</div>
+        <div class="flex items-center gap-2"><span>⚡</span> Real-time AI Analysis</div>
+        <div class="flex items-center gap-2"><span>📊</span> Clinical Data Reuse</div>
+      </div>
+    </div>
+  </main>
 
-        <form id="health-form" class="form-section">
-          <!-- Shared / Vital Metrics -->
-          <h3 class="mb-4 text-gradient">Vitals & Metrics</h3>
-          
-          <div class="input-group">
-            <label class="input-label">Age (Years)</label>
-            <input type="number" id="age" required class="input-field" placeholder="e.g., 45">
-          </div>
-          
-          <div class="input-group">
-            <label class="input-label">BMI</label>
-            <input type="number" step="0.1" id="bmi" required class="input-field" placeholder="e.g., 25.4">
-          </div>
-
-          <div class="input-group flex justify-between" style="gap: 10px;">
-            <div style="flex:1;">
-              <label class="input-label">BP (Sys - ap_hi)</label>
-              <input type="number" id="ap_hi" required class="input-field" placeholder="e.g., 120">
-            </div>
-            <div style="flex:1;">
-              <label class="input-label">BP (Dia - ap_lo)</label>
-              <input type="number" id="ap_lo" required class="input-field" placeholder="e.g., 80">
-            </div>
-          </div>
-
-          <div class="input-group">
-            <label class="input-label">Glucose Level</label>
-            <input type="number" step="0.1" id="glucose" required class="input-field" placeholder="e.g., 100">
-          </div>
-
-          <div class="input-group">
-            <label class="input-label">Insulin Level</label>
-            <input type="number" step="0.1" id="insulin" required class="input-field" placeholder="e.g., 80" value="80">
-          </div>
-
-          <div class="input-group">
-            <label class="input-label">Cholesterol</label>
-            <input type="number" id="cholesterol" required class="input-field" placeholder="1: Normal, 2: Above Normal, 3: Well Above" value="1">
-          </div>
-          
-          <div class="input-group">
-            <label class="input-label">Resting Heart Rate (Thalach)</label>
-            <input type="number" id="thalach" required class="input-field" placeholder="e.g., 150" value="150">
-          </div>
-          
-          <!-- Remaining specifically forced to default to avoid overwhelming user input if not present -->
-          <input type="hidden" id="cp" value="1">
-          <input type="hidden" id="oldpeak" value="1.0">
-          <input type="hidden" id="exang" value="0">
-
-          <button type="submit" class="btn btn-primary" style="width: 100%;">
-            Analyze Health Profile
-          </button>
-        </form>
-
-        <div id="sidebar-loader" class="loader-overlay hidden">
-          <div class="spinner"></div>
-          <p class="mt-4" style="color:var(--primary-crimson); font-weight:600;">Processing Data...</p>
-        </div>
-
-      </aside>
-
-      <!-- Results Area -->
-      <section class="results-area glass-card" id="results-container">
-        
-        <div class="placeholder-state" id="empty-state">
-          <img src="https://cdn-icons-png.flaticon.com/512/2815/2815428.png" alt="Medical Heart" class="placeholder-img">
-          <h2>Awaiting Health Profile</h2>
-          <p>Fill out the form or upload a PDF report to generate your comprehensive AI health analysis.</p>
-        </div>
-
-        <div id="full-dashboard" class="hidden">
-          
-          <!-- Combined Alerts -->
-          <div id="combined-alerts-container" class="mb-8"></div>
-
-          <!-- Predictions Overview -->
-          <h3 class="mb-4 text-gradient">AI Prediction Summary</h3>
-          <div class="summary-cards-container mb-8" id="predictions-grid">
-            <!-- Rendered via JS -->
-          </div>
-
-          <!-- Value Analysis -->
-          <h3 class="mb-4 text-gradient">Metrics Analysis</h3>
-          <div class="value-grid mb-8" id="value-grid">
-            <!-- Rendered via JS -->
-          </div>
-
-          <!-- Insights -->
-          <h3 class="mb-4 text-gradient">Contextual Insights</h3>
-          <div class="glass-card mb-8" style="background: rgba(255,228,225,0.3)">
-            <ul class="rec-list" id="insights-list">
-              <!-- JS -->
-            </ul>
-          </div>
-
-          <!-- Recommendations -->
-          <h3 class="mb-4 text-gradient">Personalized Recommendations</h3>
-          <div class="rec-grid" id="recommendations-grid">
-            
-            <div class="rec-section glass-card" style="padding:1.5rem">
-              <h4 class="rec-title">🥗 Diet Plan</h4>
-              <ul class="rec-list" id="rec-diet"></ul>
-            </div>
-
-            <div class="rec-section glass-card" style="padding:1.5rem">
-              <h4 class="rec-title">🏃 Exercise Plan</h4>
-              <ul class="rec-list" id="rec-exercise"></ul>
-            </div>
-
-            <div class="rec-section glass-card" style="padding:1.5rem">
-              <h4 class="rec-title">💊 Medicine Guidance</h4>
-              <ul class="rec-list" id="rec-med"></ul>
-            </div>
-
-            <div class="rec-section glass-card" style="padding:1.5rem">
-              <h4 class="rec-title">🛡️ Preventive Measures</h4>
-              <ul class="rec-list" id="rec-prev"></ul>
-            </div>
-
-            <div class="rec-section glass-card" style="padding:1.5rem; grid-column: span 2;">
-              <h4 class="rec-title">☀️ Vitamins & Supplements</h4>
-              <ul class="rec-list" id="rec-vitamins"></ul>
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-    </main>
-  </div>
-
-  <script src="js/api.js"></script>
-  <script src="js/dashboard.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/components.js"></script>
 </body>
 </html>

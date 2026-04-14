@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from routes import api
+from routes import api, auth
 
 app = FastAPI(title="LifeLensAI", description="Multi-Disease Prediction Platform API")
 
@@ -14,6 +14,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 app.include_router(api.router, prefix="/api", tags=["Predict"])
 
 if __name__ == "__main__":

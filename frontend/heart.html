@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cardia Intelligence - LifeLensAI</title>
+  <link rel="stylesheet" href="css/index.css">
+  <style>
+    .split-layout { display: grid; grid-template-columns: 380px 1fr; gap: 3rem; margin-top: 3rem; align-items: start; }
+    .input-sidebar { padding: 2.5rem; position: sticky; top: 120px; }
+    .rec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+    @media (max-width: 1024px) { .split-layout { grid-template-columns: 1fr; } .input-sidebar { position: static; } }
+  </style>
+</head>
+<body>
+  <header class="main-header"></header>
+  <main class="container">
+    <div class="split-layout">
+      <aside class="glass-card input-sidebar animate-slide-up">
+        <h3>Cardia Panel</h3>
+        <p class="text-muted mb-8" style="font-size: 0.9rem;">Multi-layered cardiovascular stress identification.</p>
+        
+        <div class="glass-card mb-8" style="background: rgba(220, 20, 60, 0.05); border: 1px solid var(--primary-pink); padding: 1.5rem; text-align: center;">
+          <h4 style="color: var(--primary-crimson); font-size: 0.9rem;">Intelligence Sync</h4>
+          <p class="text-muted mt-1" style="font-size: 0.75rem;">Load parameters and outcomes from Diabetes & Hypertension modules.</p>
+          <div class="flex gap-2 mt-4">
+            <button id="btn-reuse" class="btn btn-primary" style="flex: 1; font-size: 0.75rem; padding: 0.6rem;">Sync Data</button>
+            <button id="btn-manual" class="btn btn-outline" style="flex: 1; font-size: 0.75rem; padding: 0.6rem;">Clear</button>
+          </div>
+        </div>
+
+        <form id="health-form">
+          <div class="input-group"><label class="input-label">Age</label><input type="number" id="age" required class="input-field"></div>
+          <div class="input-group"><label class="input-label">Resting Blood Pressure</label><input type="number" id="trestbps" required class="input-field"></div>
+          <div class="input-group"><label class="input-label">Cholesterol</label><input type="number" id="chol" required class="input-field"></div>
+          <div class="input-group"><label class="input-label">Max Heart Rate (Thalach)</label><input type="number" id="thalach" required class="input-field"></div>
+          
+          <p class="input-label mt-8 mb-4">Clinical Context</p>
+          <div class="input-group"><label class="input-label">Diabetes Detected (0/1)</label><input type="number" id="diabetes_result" required class="input-field" min="0" max="1"></div>
+          <div class="input-group"><label class="input-label">Hypertension Detected (0/1)</label><input type="number" id="hypertension_result" required class="input-field" min="0" max="1"></div>
+          
+          <input type="hidden" id="cp" value="1"><input type="hidden" id="oldpeak" value="1.0"><input type="hidden" id="exang" value="0">
+          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;">Run Intelligence Engine</button>
+        </form>
+      </aside>
+      <div class="results-area">
+        <div id="empty-state" class="glass-card flex flex-col items-center justify-center text-center animate-slide-up" style="height: 400px; padding: 3rem;">
+          <div style="font-size: 3rem; margin-bottom: 1.5rem; opacity: 0.5;">❤️</div>
+          <h2>Evaluating Cardiac Health</h2>
+          <p class="text-muted mt-2">Initialize analysis to generate your flagship cardiovascular intelligence report.</p>
+        </div>
+        <div id="full-dashboard" class="hidden">
+          <div id="risk-alerts"></div>
+          <div id="predictions-grid" class="flex gap-6 mb-8"></div>
+          <div class="glass-card mb-8">
+            <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-subtle);"><h3 style="font-size: 1.1rem;">Cardiovascular Interpretation</h3></div>
+            <div id="metrics-analysis"></div>
+          </div>
+          <h3 class="mb-6 mt-12 flex items-center gap-3"><span style="padding: 10px; background: var(--secondary-pink); border-radius: 12px; color: var(--primary-crimson);">🛡️</span> AI Intelligence Report</h3>
+          <div class="rec-grid" id="recommendations-grid"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="js/api.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/report.js"></script>
+  <script>
+    document.getElementById('btn-reuse').onclick = async () => {
+      const records = await fetchPreviousRecords();
+      if(records && records.status === 'success' && Object.keys(records.data).length > 0) {
+        const d = records.data;
+        if(d.diabetes) { document.getElementById('diabetes_result').value = d.diabetes.result.prediction; document.getElementById('age').value = d.diabetes.inputs.age; }
+        if(d.hypertension) { 
+          document.getElementById('hypertension_result').value = d.hypertension.result.prediction; 
+          document.getElementById('trestbps').value = d.hypertension.inputs.ap_hi;
+          if(!document.getElementById('age').value) document.getElementById('age').value = d.hypertension.inputs.age;
+        }
+        alert("Intelligence Sync Successful");
+      }
+    };
+    document.getElementById('btn-manual').onclick = () => document.getElementById('health-form').reset();
+    document.getElementById('health-form').onsubmit = async (e) => {
+      e.preventDefault();
+      const payload = {
+        age: parseInt(document.getElementById('age').value),
+        cp: parseInt(document.getElementById('cp').value),
+        trestbps: parseFloat(document.getElementById('trestbps').value),
+        chol: parseFloat(document.getElementById('chol').value),
+        thalach: parseFloat(document.getElementById('thalach').value),
+        oldpeak: parseFloat(document.getElementById('oldpeak').value),
+        exang: parseInt(document.getElementById('exang').value),
+        diabetes_result: parseInt(document.getElementById('diabetes_result').value),
+        hypertension_result: parseInt(document.getElementById('hypertension_result').value)
+      };
+      const res = await predictDisease('heart', payload);
+      if(res && res.status === 'success') renderDoctorReport(res.report);
+    };
+  </script>
+</body>
+</html>

@@ -1,10 +1,13 @@
-from fastapi import APIRouter, File, UploadFile, Request
+from fastapi import APIRouter, File, UploadFile, Depends
 from pydantic import BaseModel
 import os
 import shutil
+
 from services.predictor import predictor
 from services.pdf_parser import parse_medical_pdf
-from services.recommendations import analyze_values, generate_insights, generate_recommendations, generate_combined_analysis
+from services.recommendations import analyze_values, generate_reasoning, generate_recommendations, generate_combined_analysis, generate_doctor_report
+from core.database import records_collection
+from routes.auth import get_current_user
 
 router = APIRouter()
 
@@ -34,23 +37,8 @@ class HeartDiseaseInput(BaseModel):
     diabetes_result: int
     hypertension_result: int
 
-class AllPredictInput(BaseModel):
-    # Shared Features
-    age: int
-    bmi: float
-    glucose: float
-    insulin: float
-    ap_hi: float
-    ap_lo: float
-    cholesterol: float
-    cp: int
-    thalach: float
-    oldpeak: float
-    exang: int
-
 @router.post("/extract")
 async def extract_pdf(file: UploadFile = File(...)):
-    # Save the file temporarily
     upload_dir = "uploads"
     os.makedirs(upload_dir, exist_ok=True)
     file_path = os.path.join(upload_dir, file.filename)
@@ -59,103 +47,87 @@ async def extract_pdf(file: UploadFile = File(...)):
         shutil.copyfileobj(file.file, buffer)
         
     extracted_data = parse_medical_pdf(file_path)
-    
-    # Cleanup
     if os.path.exists(file_path):
         os.remove(file_path)
         
     return {"status": "success", "data": extracted_data}
 
+@router.get("/user/records")
+async def get_user_records(current_user: dict = Depends(get_current_user)):
+    # Retrieve all previous module predictions to enable Auto-Fill
+    record = records_collection.find_one({"user_id": current_user["_id"]}, {"_id": 0})
+    if not record:
+        return {"status": "success", "data": {}}
+    return {"status": "success", "data": record}
+
+def compile_doctor_report(predict_results, data):
+    analysis = analyze_values(data)
+    reasoning = generate_reasoning(predict_results, data)
+    combined_warnings = generate_combined_analysis(predict_results)
+    recs = generate_recommendations(predict_results, data)
+    doc_report = generate_doctor_report(predict_results, data)
+
+    return {
+        "predictions": predict_results,
+        "analysis": analysis,
+        "reasoning": reasoning,
+        "recommendations": recs,
+        "combined_warnings": combined_warnings,
+        "doctor_report": doc_report
+    }
+
 @router.post("/predict/diabetes")
-async def predict_diabetes(data: DiabetesInput):
+async def predict_diabetes(data: DiabetesInput, current_user: dict = Depends(get_current_user)):
     result = predictor.predict_diabetes(
         data.glucose, data.bmi, data.age, data.blood_pressure, data.insulin
     )
-    return {"status": "success", "result": result}
+    
+    predict_results = {"diabetes": result}
+    input_data = data.dict()
+    report = compile_doctor_report(predict_results, input_data)
+    
+    # Save to MongoDB
+    records_collection.update_one(
+        {"user_id": current_user["_id"]},
+        {"$set": {"diabetes": {"inputs": input_data, "result": result}}},
+        upsert=True
+    )
+    
+    return {"status": "success", "report": report}
 
 @router.post("/predict/hypertension")
-async def predict_hypertension(data: HypertensionInput):
+async def predict_hypertension(data: HypertensionInput, current_user: dict = Depends(get_current_user)):
     result = predictor.predict_hypertension(
         data.ap_hi, data.ap_lo, data.bmi, data.age, data.cholesterol
     )
-    return {"status": "success", "result": result}
+    
+    predict_results = {"hypertension": result}
+    input_data = data.dict()
+    report = compile_doctor_report(predict_results, input_data)
+    
+    records_collection.update_one(
+        {"user_id": current_user["_id"]},
+        {"$set": {"hypertension": {"inputs": input_data, "result": result}}},
+        upsert=True
+    )
+    
+    return {"status": "success", "report": report}
 
 @router.post("/predict/heart")
-async def predict_heart(data: HeartDiseaseInput):
+async def predict_heart(data: HeartDiseaseInput, current_user: dict = Depends(get_current_user)):
     result = predictor.predict_heart_disease(
         data.age, data.cp, data.trestbps, data.chol, data.thalach,
         data.oldpeak, data.exang, data.diabetes_result, data.hypertension_result
     )
-    return {"status": "success", "result": result}
-
-@router.post("/predict/all")
-async def predict_all(data: AllPredictInput):
-    # Predict Diabetes
-    diab_res = predictor.predict_diabetes(
-        data.glucose, data.bmi, data.age, data.ap_hi, data.insulin # Using ap_hi as BP for diabetes loosely
-    )
     
-    # Predict Hypertension
-    hyper_res = predictor.predict_hypertension(
-        data.ap_hi, data.ap_lo, data.bmi, data.age, data.cholesterol
-    )
-    
-    # Predict Heart
-    diab_val = diab_res['prediction'] if diab_res else 0
-    hyper_val = hyper_res['prediction'] if hyper_res else 0
-
-    heart_res = predictor.predict_heart_disease(
-        data.age, data.cp, data.ap_hi, data.cholesterol, data.thalach,
-        data.oldpeak, data.exang, diab_val, hyper_val
-    )
-    
-    predict_results = {
-        "diabetes": diab_res,
-        "hypertension": hyper_res,
-        "heart": heart_res
-    }
-    
-    # Generate insights and recommendations
+    predict_results = {"heart": result}
     input_data = data.dict()
-    analysis = analyze_values(input_data)
-    insights = generate_insights(predict_results, input_data)
-    combined_warnings = generate_combined_analysis(predict_results)
+    report = compile_doctor_report(predict_results, input_data)
     
-    # Using generic function from recommendations.py directly here
-    # (Assuming generate_recommendations might use it)
-    has_diabetes = diab_val == 1
-    has_hyper = hyper_val == 1
-    has_heart = heart_res['prediction'] == 1 if heart_res else False
+    records_collection.update_one(
+        {"user_id": current_user["_id"]},
+        {"$set": {"heart_disease": {"inputs": input_data, "result": result}}},
+        upsert=True
+    )
     
-    # Simple direct builder
-    recs = {
-        "diet": ["Maintain a balanced diet rich in leafy greens, lean proteins, and whole grains."],
-        "exercise": ["Aim for 150 minutes of moderate aerobic activity every week."],
-        "medicine": ["Always consult a doctor before taking any long-term medication."],
-        "vitamins": ["Vitamin D (1000-2000 IU/day)", "Vitamin B12", "Omega-3 Fatty Acids (Fish Oil)"],
-        "preventive": ["Annual comprehensive health checkup", "Maintain a healthy sleep schedule of 7-8 hours"]
-    }
-    
-    if has_diabetes:
-        recs["diet"].extend(["Strictly avoid refined sugars and high-glycemic foods.", "Incorporate complex carbohydrates."])
-        recs["preventive"].append("Monitor your fasting blood sugar weekly.")
-        recs["medicine"].append("Metformin is a commonly prescribed drug (Consult physician).")
-        
-    if has_hyper:
-        recs["diet"].append("Follow the DASH diet. Reduce sodium intake.")
-        recs["exercise"].append("Engage in daily brisk walking to improve vascular health.")
-        recs["medicine"].append("ACE inhibitors are common for BP control.")
-        
-    if has_heart:
-        recs["diet"].append("Avoid saturated and trans fats to manage cholesterol.")
-        recs["vitamins"].append("CoQ10 supplements might be beneficial for heart health.")
-        recs["medicine"].append("Statins or beta-blockers might be prescribed.")
-
-    return {
-        "status": "success",
-        "predictions": predict_results,
-        "analysis": analysis,
-        "insights": insights,
-        "recommendations": recs,
-        "combined_warnings": combined_warnings
-    }
+    return {"status": "success", "report": report}

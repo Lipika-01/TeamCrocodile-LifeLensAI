@@ -31,17 +31,28 @@ function renderDashboard(data) {
 
   models.forEach(model => {
     const result = data.predictions[model.key];
+    const reasoning = data.reasoning ? data.reasoning[model.key] : "";
     if(!result) return;
     
     let stateClass = 'safe';
     if(result.risk_level === 'Medium') stateClass = 'warning';
     if(result.risk_level === 'High') stateClass = 'danger';
 
+    // SVG Math: 251.2 is full circle outline length
+    const offset = 251.2 - (251.2 * result.probability_percent) / 100;
+
     grid.innerHTML += `
       <div class="prediction-card glass-card ${stateClass}">
         <div class="disease-title">${model.title}</div>
-        <div class="prob-circle">${result.probability_percent.toFixed(0)}%</div>
+        <div class="prob-circle-container">
+          <svg class="prob-ring" width="100" height="100" viewBox="0 0 100 100">
+            <circle class="prob-ring-bg" cx="50" cy="50" r="40" />
+            <circle class="prob-ring-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: ${offset};" />
+          </svg>
+          <div class="prob-text">${result.probability_percent.toFixed(0)}%</div>
+        </div>
         <div class="risk-level">${result.risk_level} Risk</div>
+        <div class="reasoning-text">${reasoning}</div>
       </div>
     `;
   });
@@ -81,6 +92,34 @@ function renderDashboard(data) {
     populateList('rec-prev', r.preventive);
     populateList('rec-vitamins', r.vitamins);
   }
+
+  setupAccordions();
+}
+
+function setupAccordions() {
+  const titles = document.querySelectorAll('.rec-title');
+  titles.forEach(title => {
+    // Only attach once
+    if (title.getAttribute('data-listener') !== 'true') {
+      title.setAttribute('data-listener', 'true');
+      
+      const list = title.nextElementSibling;
+      const icon = title.querySelector('.expand-icon');
+      
+      // Default to expanded for immediate visibility
+      list.classList.add('expanded');
+      if (icon) icon.style.transform = 'rotate(180deg)';
+      
+      title.addEventListener('click', () => {
+        list.classList.toggle('expanded');
+        if (list.classList.contains('expanded')) {
+          if(icon) icon.style.transform = 'rotate(180deg)';
+        } else {
+          if(icon) icon.style.transform = 'rotate(0deg)';
+        }
+      });
+    }
+  });
 }
 
 function populateList(id, array) {

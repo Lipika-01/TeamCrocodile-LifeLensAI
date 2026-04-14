@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account - LifeLensAI</title>
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+  <header class="main-header"></header>
+
+  <main class="container">
+    <div style="max-width: 480px; margin: 8vh auto;" class="glass-card animate-slide-up">
+      <h2 style="font-size: 2rem; margin-bottom: 0.5rem;" class="text-center">Join LifeLensAI</h2>
+      <p class="text-muted text-center mb-8">Start your predictive health journey today.</p>
+      
+      <form id="register-form">
+        <div class="input-group">
+          <label class="input-label">Username</label>
+          <input type="text" id="username" class="input-field" required placeholder="Pick a username">
+        </div>
+        <div class="input-group">
+          <label class="input-label">Email Address</label>
+          <input type="email" id="email" class="input-field" required placeholder="you@example.com">
+        </div>
+        <div class="input-group">
+          <label class="input-label">Secure Password</label>
+          <input type="password" id="password" class="input-field" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem; font-size: 1.1rem; margin-top: 1rem;">
+          Create Account
+        </button>
+      </form>
+      
+      <p class="text-center mt-8" style="font-size: 0.9rem; color: var(--text-muted);">
+        Already have an account? <a href="login.html" style="color: var(--primary-crimson); font-weight: 600; text-decoration: none;">Sign in here</a>
+      </p>
+    </div>
+  </main>
+
+  <script src="js/components.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
