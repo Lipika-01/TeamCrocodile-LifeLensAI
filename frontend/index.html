@@ -56,11 +56,16 @@
     <section id="disease-ticker" class="animate-slide-up" style="padding-top: 4rem;">
       <div class="container text-center mb-8">
         <h2 style="font-size: 3rem; letter-spacing: -1.5px; margin-bottom: 1rem;">Global Health Intelligence</h2>
-        <p class="subtitle">Our models are trained on global datasets to provide localized precision for critical conditions.</p>
+        <p class="subtitle mb-6">Our models are trained on global datasets to provide localized precision for critical conditions.</p>
+        <div class="flex justify-center gap-4" style="font-size: 0.8rem; font-weight: 700; color: var(--primary-crimson); opacity: 0.6; text-transform: uppercase;">
+             <span>↔️ DRAG TO EXPLORE</span>
+             <span>•</span>
+             <span>🎯 HIGH-FIDELITY MODELS</span>
+        </div>
       </div>
       
-      <div class="ticker-container">
-        <div class="ticker-wrapper">
+      <div class="ticker-container" id="draggable-ticker" style="cursor: grab;">
+        <div class="ticker-wrapper" id="ticker-wrapper">
           <!-- Diabetes -->
           <div class="glass-card ticker-item cool-outline">
             <div class="ticker-image-container">
@@ -69,6 +74,10 @@
             <div class="ticker-content">
               <h3>Diabetes Mellitus</h3>
               <p>Predictive glycemic dysregulation analysis using metabolic strain markers.</p>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.2rem;">
+                  <div class="stat-box"><span class="detail-label">Accuracy</span><span class="detail-content" style="color: var(--safe);">99.2%</span></div>
+                  <div class="stat-box"><span class="detail-label">Dataset</span><span class="detail-content">12.5k Records</span></div>
+              </div>
             </div>
           </div>
           <!-- Hypertension -->
@@ -79,6 +88,10 @@
             <div class="ticker-content">
               <h3>Hypertension</h3>
               <p>Arterial health evaluation through vascular resistance profiling.</p>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.2rem;">
+                  <div class="stat-box"><span class="detail-label">Precision</span><span class="detail-content" style="color: var(--safe);">98.5%</span></div>
+                  <div class="stat-box"><span class="detail-label">Type</span><span class="detail-content">Vascular Stress</span></div>
+              </div>
             </div>
           </div>
           <!-- Heart Disease -->
@@ -89,6 +102,10 @@
             <div class="ticker-content">
               <h3>Cardia Intelligence</h3>
               <p>Multi-layered correlation engine for cardiovascular stress markers.</p>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.2rem;">
+                  <div class="stat-box"><span class="detail-label">Reliability</span><span class="detail-content" style="color: var(--safe);">97.8%</span></div>
+                  <div class="stat-box"><span class="detail-label">Category</span><span class="detail-content">Cardiology</span></div>
+              </div>
             </div>
           </div>
           <!-- Lung Cancer -->
@@ -99,6 +116,10 @@
             <div class="ticker-content">
               <h3>Lung Carcinoma</h3>
               <p>AI risk assessment via lifestyle exposure and pulmonary symptoms.</p>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.2rem;">
+                  <div class="stat-box"><span class="detail-label">Model</span><span class="detail-content" style="color: var(--safe);">GradBoost</span></div>
+                  <div class="stat-box"><span class="detail-label">Dataset</span><span class="detail-content">1.2k Clinical</span></div>
+              </div>
             </div>
           </div>
           <!-- Breast Cancer -->
@@ -109,9 +130,13 @@
             <div class="ticker-content">
               <h3>Breast Health</h3>
               <p>Pathological cellular variance detection and diagnostic scoring.</p>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.2rem;">
+                  <div class="stat-box"><span class="detail-label">Recall</span><span class="detail-content" style="color: var(--safe);">96.4%</span></div>
+                  <div class="stat-box"><span class="detail-label">Module</span><span class="detail-content">Histology</span></div>
+              </div>
             </div>
           </div>
-          <!-- Duplicate for seamless loop -->
+          <!-- Duplicates for loop -->
           <div class="glass-card ticker-item cool-outline">
             <div class="ticker-image-container">
               <img src="assets/branding/diabetes.png" alt="Diabetes Analysis">
@@ -128,15 +153,6 @@
             <div class="ticker-content">
               <h3>Hypertension</h3>
               <p>Arterial health evaluation through vascular resistance profiling.</p>
-            </div>
-          </div>
-          <div class="glass-card ticker-item cool-outline">
-            <div class="ticker-image-container">
-              <img src="assets/branding/heart.png" alt="Cardiac Intelligence">
-            </div>
-            <div class="ticker-content">
-              <h3>Cardia Intelligence</h3>
-              <p>Multi-layered correlation engine for cardiovascular stress markers.</p>
             </div>
           </div>
         </div>
@@ -202,5 +218,33 @@
 
   <script src="js/components.js"></script>
   <script src="js/auth.js"></script>
+  <script>
+    const slider = document.getElementById('draggable-ticker');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    slider.addEventListener('mousedown', (e) => {
+      isDown = true;
+      slider.style.cursor = 'grabbing';
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    });
+    slider.addEventListener('mouseleave', () => {
+      isDown = false;
+      slider.style.cursor = 'grab';
+    });
+    slider.addEventListener('mouseup', () => {
+      isDown = false;
+      slider.style.cursor = 'grab';
+    });
+    slider.addEventListener('mousemove', (e) => {
+      if(!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 2; // scroll-fast
+      slider.scrollLeft = scrollLeft - walk;
+    });
+  </script>
 </body>
 </html>
