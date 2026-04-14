@@ -184,11 +184,37 @@ body {
   border-radius: var(--radius-lg);
   box-shadow: var(--card-shadow);
   transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.05));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 .glass-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(220, 20, 60, 0.08);
+  transform: translateY(-8px);
+  box-shadow: 0 30px 60px rgba(220, 20, 60, 0.12);
+  border-color: rgba(220, 20, 60, 0.3);
+}
+
+.cool-outline {
+  border: 1px solid rgba(220, 20, 60, 0.2) !important;
+  box-shadow: 0 0 20px rgba(220, 20, 60, 0.05), var(--card-shadow) !important;
+}
+
+[data-theme="dark"] .glass-card::before {
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
 }
 
 /* Typography & Text */
@@ -425,105 +451,126 @@ body {
 .p-4 { padding: 1rem; }
 .overflow-hidden { overflow: hidden; }
 
-/* Landing Page Sections */
-.section-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 4rem;
-  letter-spacing: -1px;
-}
-
-.how-it-works-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 2rem;
-  margin-bottom: 8rem;
-}
-
-.step-card {
-  padding: 2.5rem 2rem;
-  text-align: center;
+/* Infinite Horizontal Scroller (Ticker) */
+.ticker-container {
+  width: 100vw;
   position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  overflow: hidden;
+  padding: 2rem 0;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
 }
 
-.step-number {
-  color: var(--primary-crimson);
-  font-weight: 800;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 1rem;
-  display: block;
+.ticker-wrapper {
+  display: flex;
+  width: max-content;
+  gap: 3rem;
+  animation: ticker-loop 40s linear infinite;
 }
 
-.step-icon {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  display: inline-block;
+.ticker-wrapper:hover {
+  animation-play-state: paused;
 }
 
-.step-card h3 {
-  font-size: 1.25rem;
-  margin-bottom: 1rem;
-  color: var(--text-main);
+@keyframes ticker-loop {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
-.step-card p {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-}
-
-.disease-info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2.5rem;
-}
-
-.disease-card {
-  padding: 2.5rem;
+.ticker-item {
+  width: 450px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
+  padding: 0 !important;
+  border-radius: 32px;
 }
 
-.disease-card h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: var(--primary-crimson);
+.ticker-image-container {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  border-radius: 32px 32px 0 0;
 }
 
-.disease-card p {
-  font-size: 1rem;
+.ticker-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.ticker-item:hover .ticker-image-container img {
+  transform: scale(1.05);
+}
+
+.ticker-content {
+  padding: 2rem;
+}
+
+/* Zig-Zag Section Structure */
+.zigzag-wrapper {
+  padding: 8rem 0;
+  background: linear-gradient(to bottom, transparent, var(--secondary-pink), transparent);
+  margin: 4rem 0;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+[data-theme="dark"] .zigzag-wrapper {
+  background: linear-gradient(to bottom, transparent, rgba(220, 20, 60, 0.03), transparent);
+}
+
+.zigzag-row {
+  display: flex;
+  align-items: center;
+  gap: 6rem;
+  margin-bottom: 8rem;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 2rem;
+}
+
+.zigzag-row:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.zigzag-visual {
+  flex: 1;
+  border-radius: 32px;
+  overflow: hidden;
+  aspect-ratio: 16/10;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+}
+
+.zigzag-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.zigzag-text {
+  flex: 1;
+}
+
+.zigzag-text h3 {
+  font-size: 2.2rem;
   margin-bottom: 1.5rem;
-  color: var(--text-main);
 }
 
-.disease-details {
-  border-top: 1px solid var(--border-subtle);
-  padding-top: 1.5rem;
-  margin-top: auto;
-}
-
-.detail-item {
-  margin-bottom: 1rem;
-}
-
-.detail-label {
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--text-muted);
-  display: block;
-  margin-bottom: 0.4rem;
-}
-
-.detail-content {
-  font-size: 0.9rem;
-  color: var(--text-main);
-}
-
-@media (max-width: 768px) {
-  .section-title { font-size: 2rem; }
-  .disease-info-grid { grid-template-columns: 1fr; }
+@media (max-width: 1024px) {
+  .zigzag-row, .zigzag-row:nth-child(even) {
+    flex-direction: column;
+    gap: 3rem;
+    text-align: center;
+  }
 }

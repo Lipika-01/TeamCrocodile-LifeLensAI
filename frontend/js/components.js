@@ -39,20 +39,20 @@ const UI = {
     
     if (token) {
       navContent = `
-        <a href="dashboard.html" class="nav-link ${isDashboard ? 'active' : ''}">
+        <a href="dashboard.html" class="nav-link ${isDashboard ? 'active' : ''}" style="font-size: 1.05rem; gap: 10px;">
           ${this.icons.dashboard} Dashboard
         </a>
         
-        <button id="theme-btn" class="theme-toggle">
+        <button id="theme-btn" class="theme-toggle" style="width: 48px; height: 48px;">
           ${localStorage.getItem('theme') === 'dark' ? this.icons.sun : this.icons.moon}
         </button>
 
-        <div class="user-identity">
-          <div class="user-avatar">${initial}</div>
-          <div style="display: flex; flex-direction: column;">
-            <span style="font-size: 0.8rem; font-weight: 600;">${username}</span>
+        <div class="user-identity" style="padding-left: 24px;">
+          <div class="user-avatar" style="width: 42px; height: 42px; font-size: 1rem;">${initial}</div>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 0.9rem; font-weight: 700;">${username}</span>
             <button id="logout-btn" 
-                    style="background: none; border: none; color: var(--primary-crimson); font-size: 0.7rem; cursor: pointer; padding: 0; text-align: left; font-weight: 700;">
+                    style="background: none; border: none; color: var(--primary-crimson); font-size: 0.75rem; cursor: pointer; padding: 0; text-align: left; font-weight: 800; opacity: 0.8;">
                 Sign Out
             </button>
           </div>
@@ -60,22 +60,22 @@ const UI = {
       `;
     } else {
       navContent = `
-        <a href="login.html" class="nav-link">Sign In</a>
-        <a href="register.html" class="btn btn-primary" style="padding: 0.5rem 1.2rem; font-size: 0.85rem;">Get Started</a>
-        <button id="theme-btn" class="theme-toggle">
+        <a href="login.html" class="nav-link" style="font-size: 1.05rem;">Sign In</a>
+        <a href="register.html" class="btn btn-primary" style="padding: 0.7rem 1.8rem; font-size: 0.95rem; border-radius: 12px;">Get Started</a>
+        <button id="theme-btn" class="theme-toggle" style="width: 48px; height: 48px; margin-left: 10px;">
           ${localStorage.getItem('theme') === 'dark' ? this.icons.sun : this.icons.moon}
         </button>
       `;
     }
 
     header.innerHTML = `
-      <div class="header-inner animate-slide-up">
-        <div class="logo-container flex items-center gap-2" style="cursor:pointer;" onclick="window.location.href='index.html'">
-          <div style="background: var(--primary-crimson); color: white; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700;">L</div>
-          <h1 class="text-gradient" style="font-size: 1.3rem; letter-spacing: -0.5px;">LifeLens<span style="color: var(--text-main); font-weight: 400;">AI</span></h1>
+      <div class="header-inner animate-slide-up" style="height: 80px;">
+        <div class="logo-container flex items-center gap-3" style="cursor:pointer;" onclick="window.location.href='index.html'">
+          <div style="background: var(--primary-crimson); color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(220, 20, 60, 0.2);">L</div>
+          <h1 class="text-gradient" style="font-size: 1.6rem; letter-spacing: -0.8px; font-weight: 800;">LifeLens<span style="color: var(--text-main); font-weight: 400;">AI</span></h1>
         </div>
         
-        <nav class="nav-links">
+        <nav class="nav-links" style="gap: 2.5rem;">
           ${navContent}
         </nav>
       </div>

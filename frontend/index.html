@@ -6,158 +6,198 @@
   <title>LifeLensAI - Premium Healthcare Intelligence</title>
   <link rel="stylesheet" href="css/index.css">
   <style>
-    .hero-section { min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin-bottom: 4rem; }
-    .hero-title { font-size: 4.5rem; line-height: 1.1; margin-bottom: 2rem; letter-spacing: -2px; }
-    .hero-subtitle { max-width: 600px; margin-bottom: 3rem; font-size: 1.25rem; }
+    .hero-section { min-height: 90vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin-bottom: 2rem; position: relative; }
+    .hero-title { font-size: 5rem; line-height: 1.05; margin-bottom: 2rem; letter-spacing: -3px; font-weight: 800; }
+    .hero-subtitle { max-width: 700px; margin-bottom: 3.5rem; font-size: 1.35rem; opacity: 0.9; line-height: 1.5; }
+    
+    html { scroll-behavior: smooth; }
+    
+    .section-label {
+      padding: 8px 16px; 
+      background: var(--secondary-pink); 
+      border-radius: 100px; 
+      color: var(--primary-crimson); 
+      font-weight: 700; 
+      font-size: 0.8rem; 
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 1.5rem; 
+      border: 1px solid var(--primary-pink);
+      display: inline-block;
+    }
   </style>
 </head>
 <body>
 
   <header class="main-header"></header>
 
-  <main class="container">
+  <main>
     <!-- Hero Section -->
-    <div class="hero-section animate-slide-up">
-      <div style="padding: 10px 20px; background: var(--secondary-pink); border-radius: 100px; color: var(--primary-crimson); font-weight: 600; font-size: 0.85rem; margin-bottom: 2rem; border: 1px solid var(--primary-pink);">
-        ✨ Now Powered by Google Gemini Pro
-      </div>
-      <h1 class="hero-title">Predictive Health.<br><span class="text-gradient">Redefined for You.</span></h1>
-      <p class="hero-subtitle subtitle">Connect your clinical metrics to a world-class AI intelligence engine. Get doctor-level insights, dynamic routines, and proactive monitoring plans.</p>
-      
-      <div class="flex gap-4">
-        <a href="register.html" class="btn btn-primary" style="padding: 1rem 2.5rem; font-size: 1.1rem;">Get Started Free</a>
-        <a href="login.html" class="btn btn-outline" style="padding: 1rem 2.5rem; font-size: 1.1rem;">Sign In to Portal</a>
-      </div>
+    <div class="container overflow-hidden">
+      <div class="hero-section animate-slide-up">
+        <div class="section-label">✨ Intelligence Beyond Diagnostics</div>
+        <h1 class="hero-title">Predictive Health.<br><span class="text-gradient">Redefined for You.</span></h1>
+        <p class="hero-subtitle subtitle">Bridge the gap between raw clinical metrics and world-class intelligence. Unlock doctor-level insights with AI precision.</p>
+        
+        <div class="flex gap-6 items-center">
+          <a href="register.html" class="btn btn-primary cool-outline" style="padding: 1.2rem 3rem; font-size: 1.15rem; border-radius: 16px;">Initialize Portal</a>
+          <a href="#disease-ticker" class="btn btn-outline" style="padding: 1.2rem 3rem; font-size: 1.15rem; border-radius: 16px;">Know More</a>
+        </div>
 
-      <div class="flex gap-12 mt-12" style="opacity: 0.6;">
-        <div class="flex items-center gap-2"><span>🛡️</span> HIPAA Compliant</div>
-        <div class="flex items-center gap-2"><span>⚡</span> Real-time Analysis</div>
-        <div class="flex items-center gap-2"><span>📊</span> Clinical Data Synthesis</div>
+        <div class="flex gap-12 mt-12" style="opacity: 0.5; font-weight: 600; font-size: 0.9rem;">
+          <div class="flex items-center gap-3"><span>🛡️</span> HIPAA COMPLIANT</div>
+          <div class="flex items-center gap-3"><span>⚡</span> REAL-TIME ANALYSIS</div>
+          <div class="flex items-center gap-3"><span>📊</span> DATA SYNTHESIS</div>
+        </div>
       </div>
     </div>
 
-    <!-- How It Works Section -->
-    <section class="mt-8 mb-12 animate-slide-up">
-      <h2 class="section-title">How It Works</h2>
-      <div class="how-it-works-grid">
-        <div class="glass-card step-card">
-          <span class="step-number">Step 01</span>
-          <div class="step-icon">📝</div>
-          <h3>Input Data</h3>
-          <p>Manually enter your clinical parameters or upload your latest medical reports for extraction.</p>
-        </div>
-        <div class="glass-card step-card">
-          <span class="step-number">Step 02</span>
-          <div class="step-icon">⚙️</div>
-          <h3>AI Processing</h3>
-          <p>Our intelligence engine clean and standardizes your parameters for high-precision inference.</p>
-        </div>
-        <div class="glass-card step-card">
-          <span class="step-number">Step 03</span>
-          <div class="step-icon">🧠</div>
-          <h3>ML Risk Analysis</h3>
-          <p>Validated machine learning models evaluate your risk across multiple disease modules.</p>
-        </div>
-        <div class="glass-card step-card">
-          <span class="step-number">Step 04</span>
-          <div class="step-icon">📄</div>
-          <h3>Report Generation</h3>
-          <p>A comprehensive, easy-to-read health intelligence report is generated instantly.</p>
-        </div>
-        <div class="glass-card step-card">
-          <span class="step-number">Step 05</span>
-          <div class="step-icon">🎯</div>
-          <h3>Actionable Insights</h3>
-          <p>Receive personalized recommendations for diet, exercise, and clinical monitoring.</p>
-        </div>
+    <!-- Infinite Disease Ticker -->
+    <section id="disease-ticker" class="animate-slide-up" style="padding-top: 4rem;">
+      <div class="container text-center mb-8">
+        <h2 style="font-size: 3rem; letter-spacing: -1.5px; margin-bottom: 1rem;">Global Health Intelligence</h2>
+        <p class="subtitle">Our models are trained on global datasets to provide localized precision for critical conditions.</p>
       </div>
-    </section>
-
-    <!-- Disease Information Section -->
-    <section class="mt-8 mb-12 animate-slide-up">
-      <h2 class="section-title">Global Health Intelligence</h2>
-      <div class="disease-info-grid">
-        <!-- Diabetes -->
-        <div class="glass-card disease-card">
-          <h3>Diabetes Mellitus</h3>
-          <p>A chronic condition affecting how your body turns food into energy, characterized by high blood glucose levels.</p>
-          <div class="disease-details">
-            <div class="detail-item">
-              <span class="detail-label">Risk Factors</span>
-              <span class="detail-content">Obesity, sedentary lifestyle, family history, and high blood pressure.</span>
+      
+      <div class="ticker-container">
+        <div class="ticker-wrapper">
+          <!-- Diabetes -->
+          <div class="glass-card ticker-item cool-outline">
+            <div class="ticker-image-container">
+              <img src="assets/branding/diabetes.png" alt="Diabetes Analysis">
             </div>
-            <div class="detail-item">
-              <span class="detail-label">Common Symptoms</span>
-              <span class="detail-content">Increased thirst, frequent urination, fatigue, and blurred vision.</span>
+            <div class="ticker-content">
+              <h3>Diabetes Mellitus</h3>
+              <p>Predictive glycemic dysregulation analysis using metabolic strain markers.</p>
             </div>
           </div>
-        </div>
-
-        <!-- Hypertension -->
-        <div class="glass-card disease-card">
-          <h3>Hypertension</h3>
-          <p>Commonly known as high blood pressure, this condition increases the force of blood against your artery walls.</p>
-          <div class="disease-details">
-            <div class="detail-item">
-              <span class="detail-label">Risk Factors</span>
-              <span class="detail-content">High salt intake, stress, smoking, and lack of physical activity.</span>
+          <!-- Hypertension -->
+          <div class="glass-card ticker-item cool-outline">
+            <div class="ticker-image-container">
+              <img src="assets/branding/hypertension.png" alt="Vascular Health">
             </div>
-            <div class="detail-item">
-              <span class="detail-label">Common Symptoms</span>
-              <span class="detail-content">Often asymptomatic (The Silent Killer), but can cause headaches or chest pain.</span>
+            <div class="ticker-content">
+              <h3>Hypertension</h3>
+              <p>Arterial health evaluation through vascular resistance profiling.</p>
             </div>
           </div>
-        </div>
-
-        <!-- Heart Disease -->
-        <div class="glass-card disease-card">
-          <h3>Heart Disease</h3>
-          <p>A range of conditions that affect your heart's ability to function correctly, including coronary artery disease.</p>
-          <div class="disease-details">
-            <div class="detail-item">
-              <span class="detail-label">Risk Factors</span>
-              <span class="detail-content">High cholesterol, diabetes, smoking, and age.</span>
+          <!-- Heart Disease -->
+          <div class="glass-card ticker-item cool-outline">
+            <div class="ticker-image-container">
+              <img src="assets/branding/heart.png" alt="Cardiac Intelligence">
             </div>
-            <div class="detail-item">
-              <span class="detail-label">Common Symptoms</span>
-              <span class="detail-content">Shortness of breath, chest discomfort, and numbness in limbs.</span>
+            <div class="ticker-content">
+              <h3>Cardia Intelligence</h3>
+              <p>Multi-layered correlation engine for cardiovascular stress markers.</p>
             </div>
           </div>
-        </div>
-
-        <!-- Lung Cancer -->
-        <div class="glass-card disease-card">
-          <h3>Lung Cancer</h3>
-          <p>A malignant tumor that starts in the lungs, often linked to long-term exposure to inhaled toxins.</p>
-          <div class="disease-details">
-            <div class="detail-item">
-              <span class="detail-label">Risk Factors</span>
-              <span class="detail-content">Smoking (primary), secondhand smoke, and occupational exposure.</span>
+          <!-- Lung Cancer -->
+          <div class="glass-card ticker-item cool-outline">
+            <div class="ticker-image-container">
+              <img src="assets/branding/lung.png" alt="Lung Carcinoma">
             </div>
-            <div class="detail-item">
-              <span class="detail-label">Common Symptoms</span>
-              <span class="detail-content">Persistent cough, coughing blood, and unexplained weight loss.</span>
+            <div class="ticker-content">
+              <h3>Lung Carcinoma</h3>
+              <p>AI risk assessment via lifestyle exposure and pulmonary symptoms.</p>
             </div>
           </div>
-        </div>
-
-        <!-- Breast Cancer -->
-        <div class="glass-card disease-card">
-          <h3>Breast Cancer</h3>
-          <p>Cancer that forms in the cells of the breasts, most common in women but can occur in men.</p>
-          <div class="disease-details">
-            <div class="detail-item">
-              <span class="detail-label">Risk Factors</span>
-              <span class="detail-content">Genetic mutations (BRCA1/BRCA2), age, and dense breast tissue.</span>
+          <!-- Breast Cancer -->
+          <div class="glass-card ticker-item cool-outline">
+            <div class="ticker-image-container">
+              <img src="assets/branding/breast.png" alt="Breast Health">
             </div>
-            <div class="detail-item">
-              <span class="detail-label">Common Symptoms</span>
-              <span class="detail-content">Lump in the breast, skin changes (dimpling), or unusual discharge.</span>
+            <div class="ticker-content">
+              <h3>Breast Health</h3>
+              <p>Pathological cellular variance detection and diagnostic scoring.</p>
+            </div>
+          </div>
+          <!-- Duplicate for seamless loop -->
+          <div class="glass-card ticker-item cool-outline">
+            <div class="ticker-image-container">
+              <img src="assets/branding/diabetes.png" alt="Diabetes Analysis">
+            </div>
+            <div class="ticker-content">
+              <h3>Diabetes Mellitus</h3>
+              <p>Predictive glycemic dysregulation analysis using metabolic strain markers.</p>
+            </div>
+          </div>
+          <div class="glass-card ticker-item cool-outline">
+            <div class="ticker-image-container">
+              <img src="assets/branding/hypertension.png" alt="Vascular Health">
+            </div>
+            <div class="ticker-content">
+              <h3>Hypertension</h3>
+              <p>Arterial health evaluation through vascular resistance profiling.</p>
+            </div>
+          </div>
+          <div class="glass-card ticker-item cool-outline">
+            <div class="ticker-image-container">
+              <img src="assets/branding/heart.png" alt="Cardiac Intelligence">
+            </div>
+            <div class="ticker-content">
+              <h3>Cardia Intelligence</h3>
+              <p>Multi-layered correlation engine for cardiovascular stress markers.</p>
             </div>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- Zig-Zag How It Works -->
+    <div class="zigzag-wrapper">
+      <div class="container text-center mb-12">
+        <div class="section-label">The Pipeline</div>
+        <h2 style="font-size: 3.5rem; letter-spacing: -2px;">How LifeLensAI Works</h2>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="zigzag-row animate-slide-up">
+        <div class="zigzag-visual cool-outline">
+          <img src="assets/branding/workflow_step_1.png" alt="Input Data">
+        </div>
+        <div class="zigzag-text">
+          <span class="step-number" style="text-align: left;">Step 01 / Data Ingestion</span>
+          <h3>Clinical Metric Capture</h3>
+          <p class="subtitle">Enter your health parameters manually or leverage our AI-extraction tool to pull data directly from clinical PDF reports with 99.8% text accuracy.</p>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="zigzag-row animate-slide-up">
+        <div class="zigzag-visual cool-outline" style="background: var(--surface);">
+          <img src="assets/branding/hypertension.png" alt="AI Processing">
+        </div>
+        <div class="zigzag-text">
+          <span class="step-number" style="text-align: left;">Step 02 / Standardization</span>
+          <h3>Standardized Processing</h3>
+          <p class="subtitle">Our backend normalizes variations in units and patient demographics, ensuring your data is primed for high-granularity machine learning inference.</p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="zigzag-row animate-slide-up">
+        <div class="zigzag-visual cool-outline">
+          <img src="assets/branding/lung.png" alt="ML Analysis">
+        </div>
+        <div class="zigzag-text">
+          <span class="step-number" style="text-align: left;">Step 03 / Evaluation</span>
+          <h3>Predictive ML Analysis</h3>
+          <p class="subtitle">Dataset-tuned models evaluate your profile against clinical benchmarks, identifying risk factors that traditional screenings might overlook.</p>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="zigzag-row animate-slide-up">
+        <div class="zigzag-visual cool-outline">
+          <img src="assets/branding/heart.png" alt="Recommendations">
+        </div>
+        <div class="zigzag-text">
+          <span class="step-number" style="text-align: left;">Step 04 / Intelligence</span>
+          <h3>Diagnostic Reporting</h3>
+          <p class="subtitle">Receive a professionally structured intelligence report featuring medical summaries, routine optimizations, and dietary configurations.</p>
+        </div>
+      </div>
+    </div>
   </main>
 
   <script src="js/components.js"></script>
