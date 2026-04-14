@@ -239,4 +239,91 @@ if os.path.exists(heart_path):
         pickle.dump(best_heart, f)
     print("Saved heart_model.pkl")
 
+# ---------------------------------------------------------
+# 4. BREAST CANCER MODEL
+# ---------------------------------------------------------
+print("\n" + "="*50)
+print("4. TRAINING BREAST CANCER MODEL")
+print("="*50)
+breast_path = 'datasets/data.csv'
+if os.path.exists(breast_path):
+    df_bc = pd.read_csv(breast_path)
+    
+    # Target Encoding: Malignant (M) -> 1, Benign (B) -> 0
+    df_bc['target'] = np.where(df_bc['diagnosis'] == 'M', 1, 0)
+    
+    # Selected Features matching user requirements
+    features_bc = [
+        'radius_mean', 'texture_mean', 'perimeter_mean', 'area_mean',
+        'smoothness_mean', 'compactness_mean', 'concavity_mean', 
+        'symmetry_mean', 'fractal_dimension_mean'
+    ]
+    
+    X_bc = df_bc[features_bc]
+    y_bc = df_bc['target']
+    
+    models_grid_bc = {
+        "RandomForest": {
+            "model": RandomForestClassifier(random_state=42),
+            "params": {
+                "n_estimators": [50, 100],
+                "max_depth": [5, 10, None]
+            }
+        },
+        "LogisticRegression": {
+            "model": LogisticRegression(max_iter=1000),
+            "params": {
+                "C": [0.1, 1, 10]
+            }
+        }
+    }
+    
+    best_bc = train_and_select_best(X_bc, y_bc, models_grid_bc)
+    
+    with open('models/breast_cancer_model.pkl', 'wb') as f:
+        pickle.dump(best_bc, f)
+    print("Saved breast_cancer_model.pkl")
+
+# ---------------------------------------------------------
+# 5. LUNG CANCER MODEL
+# ---------------------------------------------------------
+print("\n" + "="*50)
+print("5. TRAINING LUNG CANCER MODEL")
+print("="*50)
+lung_path = 'datasets/survey lung cancer.csv'
+if os.path.exists(lung_path):
+    df_lung = pd.read_csv(lung_path)
+    
+    # Target Encoding: YES -> 1, NO -> 0
+    df_lung['target'] = np.where(df_lung['LUNG_CANCER'] == 'YES', 1, 0)
+    
+    # Selected Features matching user requirements
+    # Note: 'FATIGUE ' has a trailing space in Kaggle dataset.
+    features_lung = [
+        'AGE', 'SMOKING', 'ALCOHOL CONSUMING', 'COUGHING', 
+        'CHEST PAIN', 'FATIGUE ', 'SHORTNESS OF BREATH'
+    ]
+    
+    # Map 1, 2 to 0, 1 to make it standard (if kaggle dataset uses 1=NO, 2=YES)
+    # the model handles any int natively, but let's train directly on the data present.
+    
+    X_lung = df_lung[features_lung]
+    y_lung = df_lung['target']
+    
+    models_grid_lung = {
+        "RandomForest": {
+            "model": RandomForestClassifier(random_state=42),
+            "params": {
+                "n_estimators": [50, 100],
+                "max_depth": [5, 10]
+            }
+        }
+    }
+    
+    best_lung = train_and_select_best(X_lung, y_lung, models_grid_lung)
+    
+    with open('models/lung_cancer_model.pkl', 'wb') as f:
+        pickle.dump(best_lung, f)
+    print("Saved lung_cancer_model.pkl")
+
 print("\nModel upgrade and tuning sequence strictly completed.")

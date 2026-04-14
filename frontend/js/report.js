@@ -21,18 +21,20 @@ const ReportUI = {
     dashboard.classList.add('animate-slide-up');
 
     const report = reportData.report || reportData;
-    const predictions = report.predictions;
-    const analysis = report.analysis;
-    const warnings = report.combined_warnings;
+    const predictions = report.predictions || {};
+    const analysis = report.analysis || [];
+    const warnings = report.combined_warnings || [];
+    const docReport = report.doctor_report || {};
 
     // 1. Predictions Summary Card
-    this.renderSummary(predictions, report.doctor_report.medical_summary);
+    const summaryText = docReport.medical_summary || 'AI analysis complete. Review the detailed report below.';
+    this.renderSummary(predictions, summaryText);
 
     // 2. Metrics Analysis
     this.renderMetrics(analysis);
 
     // 3. Detailed Insight Cards
-    this.renderInsightCards(report.doctor_report);
+    this.renderInsightCards(docReport);
 
     // 4. Alerts
     this.renderAlerts(warnings, predictions);
@@ -43,18 +45,22 @@ const ReportUI = {
     grid.innerHTML = '';
     
     for(const [key, result] of Object.entries(predictions)) {
+      // Support both old `probability_percent` and new `probability` field
+      const prob = result.probability_percent ?? result.probability ?? 50;
       let status = 'safe';
       if(result.risk_level === 'Medium') status = 'warning';
       if(result.risk_level === 'High') status = 'danger';
 
-      const offset = 251.2 - (251.2 * result.probability_percent) / 100;
+      const offset = 251.2 - (251.2 * prob) / 100;
+      const label = result.prediction || result.risk_level || 'Analysed';
 
       grid.innerHTML += `
         <div class="glass-card" style="padding: 2rem; flex: 1; border-left: 4px solid var(--${status});">
           <div class="flex justify-between items-start mb-6">
             <div>
               <p class="input-label" style="margin-bottom: 4px;">Diagnostic Result</p>
-              <h2 style="font-size: 1.8rem;">${key.toUpperCase()}</h2>
+              <h2 style="font-size: 1.8rem;">${key.replace(/_/g,' ').toUpperCase()}</h2>
+              <p style="font-size: 0.95rem; font-weight: 600; margin-top: 4px; color: var(--${status});">${label}</p>
             </div>
             <div class="prob-circle-container">
               <svg class="prob-ring" width="80" height="80" viewBox="0 0 100 100" style="transform: rotate(-90deg);">
@@ -63,7 +69,7 @@ const ReportUI = {
                   stroke-dasharray="251.2" style="stroke-dashoffset: ${offset}; transition: stroke-dashoffset 1s ease-out;" />
               </svg>
               <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 700;">
-                ${result.probability_percent.toFixed(0)}%
+                ${Number(prob).toFixed(0)}%
               </div>
             </div>
           </div>
@@ -73,7 +79,8 @@ const ReportUI = {
               ${result.risk_level} Risk Level
             </span>
           </div>
-          <p class="mt-4" style="font-size: 0.95rem; color: var(--text-muted);">${summaryText}</p>
+          ${result.model_accuracy ? `<p class="mt-2" style="font-size: 0.8rem; color: var(--text-muted);">Model Accuracy: ${result.model_accuracy}</p>` : ''}
+          <p class="mt-4" style="font-size: 0.95rem; color: var(--text-muted);">${summaryText || result.explanation || ''}</p>
         </div>
       `;
     }

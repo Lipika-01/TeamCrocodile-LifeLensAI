@@ -16,43 +16,82 @@ else:
 
 def analyze_values(data):
     analysis = []
-    # Glucose Interpretation
-    if 'glucose' in data:
-        gl = data['glucose']
+
+    # Glucose — legacy key 'glucose' or new key 'FBS_mg_dL'
+    gl = data.get('glucose') or data.get('FBS_mg_dL')
+    if gl is not None:
+        gl = float(gl)
         if gl < 70:
-            analysis.append({"name": "Glucose", "status": "Low (Hypoglycemic)", "value": gl, "warning": True})
-        elif gl <= 125:
-            analysis.append({"name": "Glucose", "status": "Normal", "value": gl, "warning": False})
-        elif gl < 140:
-            analysis.append({"name": "Glucose", "status": "Elevated (Pre-Diabetic)", "value": gl, "warning": True})
+            analysis.append({"name": "Blood Glucose (FBS)", "status": "Low (Hypoglycemic)", "value": f"{gl} mg/dL", "warning": True})
+        elif gl <= 100:
+            analysis.append({"name": "Blood Glucose (FBS)", "status": "Normal", "value": f"{gl} mg/dL", "warning": False})
+        elif gl < 126:
+            analysis.append({"name": "Blood Glucose (FBS)", "status": "Elevated (Pre-Diabetic)", "value": f"{gl} mg/dL", "warning": True})
         else:
-            analysis.append({"name": "Glucose", "status": "High (Diabetic Range)", "value": gl, "warning": True})
-            
-    # BMI Interpretation
-    if 'bmi' in data:
-        bmi = data['bmi']
+            analysis.append({"name": "Blood Glucose (FBS)", "status": "High (Diabetic Range)", "value": f"{gl} mg/dL", "warning": True})
+
+    # HbA1c
+    hba1c = data.get('HbA1c_pct')
+    if hba1c is not None:
+        hba1c = float(hba1c)
+        if hba1c < 5.7:
+            analysis.append({"name": "HbA1c", "status": "Normal", "value": f"{hba1c}%", "warning": False})
+        elif hba1c < 6.5:
+            analysis.append({"name": "HbA1c", "status": "Pre-Diabetic Range", "value": f"{hba1c}%", "warning": True})
+        else:
+            analysis.append({"name": "HbA1c", "status": "Diabetic Range", "value": f"{hba1c}%", "warning": True})
+
+    # BMI — handles both 'bmi' and 'BMI'
+    bmi = data.get('bmi') or data.get('BMI')
+    if bmi is not None:
+        bmi = float(bmi)
         if bmi < 18.5:
-            analysis.append({"name": "BMI", "status": "Underweight", "value": bmi, "warning": True})
-        elif bmi <= 25:
-            analysis.append({"name": "BMI", "status": "Normal", "value": bmi, "warning": False})
-        elif bmi <= 30:
-            analysis.append({"name": "BMI", "status": "Overweight", "value": bmi, "warning": True})
+            analysis.append({"name": "BMI", "status": "Underweight", "value": f"{bmi} kg/m²", "warning": True})
+        elif bmi <= 24.9:
+            analysis.append({"name": "BMI", "status": "Normal", "value": f"{bmi} kg/m²", "warning": False})
+        elif bmi <= 29.9:
+            analysis.append({"name": "BMI", "status": "Overweight", "value": f"{bmi} kg/m²", "warning": True})
         else:
-            analysis.append({"name": "BMI", "status": "Obese", "value": bmi, "warning": True})
-            
-    # BP Interpretation
-    if 'ap_hi' in data and 'ap_lo' in data:
-        sys = data['ap_hi']
-        dia = data['ap_lo']
-        if sys < 120 and dia < 80:
-            analysis.append({"name": "Blood Pressure", "status": "Normal", "value": f"{sys}/{dia}", "warning": False})
-        elif sys < 130 and dia < 80:
-            analysis.append({"name": "Blood Pressure", "status": "Elevated", "value": f"{sys}/{dia}", "warning": True})
-        elif sys >= 140 or dia >= 90:
-            analysis.append({"name": "Blood Pressure", "status": "High (Stage 2)", "value": f"{sys}/{dia}", "warning": True})
+            analysis.append({"name": "BMI", "status": "Obese", "value": f"{bmi} kg/m²", "warning": True})
+
+    # Blood Pressure — handles old (ap_hi/ap_lo), new diabetes (SBP_mmHg/DBP_mmHg), new hypertension (SBP/DBP)
+    sys_val = data.get('ap_hi') or data.get('SBP_mmHg') or data.get('SBP')
+    dia_val = data.get('ap_lo') or data.get('DBP_mmHg') or data.get('DBP')
+    if sys_val and dia_val:
+        sys_val, dia_val = float(sys_val), float(dia_val)
+        if sys_val < 120 and dia_val < 80:
+            analysis.append({"name": "Blood Pressure", "status": "Normal", "value": f"{sys_val}/{dia_val} mmHg", "warning": False})
+        elif sys_val < 130 and dia_val < 80:
+            analysis.append({"name": "Blood Pressure", "status": "Elevated", "value": f"{sys_val}/{dia_val} mmHg", "warning": True})
+        elif sys_val >= 140 or dia_val >= 90:
+            analysis.append({"name": "Blood Pressure", "status": "High (Stage 2)", "value": f"{sys_val}/{dia_val} mmHg", "warning": True})
         else:
-            analysis.append({"name": "Blood Pressure", "status": "High (Stage 1)", "value": f"{sys}/{dia}", "warning": True})
-            
+            analysis.append({"name": "Blood Pressure", "status": "High (Stage 1)", "value": f"{sys_val}/{dia_val} mmHg", "warning": True})
+
+    # LDL Cholesterol
+    ldl = data.get('LDL_mg_dL') or data.get('LDL_Cholesterol')
+    if ldl is not None:
+        ldl = float(ldl)
+        if ldl < 100:
+            analysis.append({"name": "LDL Cholesterol", "status": "Optimal", "value": f"{ldl} mg/dL", "warning": False})
+        elif ldl < 130:
+            analysis.append({"name": "LDL Cholesterol", "status": "Near Optimal", "value": f"{ldl} mg/dL", "warning": False})
+        elif ldl < 160:
+            analysis.append({"name": "LDL Cholesterol", "status": "Borderline High", "value": f"{ldl} mg/dL", "warning": True})
+        else:
+            analysis.append({"name": "LDL Cholesterol", "status": "High", "value": f"{ldl} mg/dL", "warning": True})
+
+    # CEA (Lung Cancer marker)
+    cea = data.get('CEA_ng_mL')
+    if cea is not None:
+        cea = float(cea)
+        if cea <= 2.5:
+            analysis.append({"name": "CEA Marker", "status": "Normal", "value": f"{cea} ng/mL", "warning": False})
+        elif cea <= 5.0:
+            analysis.append({"name": "CEA Marker", "status": "Mildly Elevated", "value": f"{cea} ng/mL", "warning": True})
+        else:
+            analysis.append({"name": "CEA Marker", "status": "Significantly Elevated", "value": f"{cea} ng/mL", "warning": True})
+
     return analysis
 
 def get_recommendations_from_gemini(predict_results, data):

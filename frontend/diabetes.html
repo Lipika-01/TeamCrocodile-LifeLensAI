@@ -39,25 +39,77 @@
         <form id="health-form">
           <div class="input-group">
             <label class="input-label">Age</label>
-            <input type="number" id="age" required class="input-field" placeholder="Years">
+            <input type="number" id="Age" required class="input-field" placeholder="e.g. 42">
           </div>
           <div class="input-group">
             <label class="input-label">BMI</label>
-            <input type="number" step="0.1" id="bmi" required class="input-field" placeholder="kg/m²">
+            <input type="number" step="0.1" id="BMI" required class="input-field" placeholder="e.g. 27.5 kg/m²">
           </div>
           <div class="input-group">
-            <label class="input-label">Blood Pressure (Sys)</label>
-            <input type="number" id="blood_pressure" required class="input-field" placeholder="mmHg">
+            <label class="input-label">Fasting Blood Sugar (FBS)</label>
+            <input type="number" step="0.1" id="FBS_mg_dL" required class="input-field" placeholder="e.g. 110 mg/dL">
           </div>
           <div class="input-group">
-            <label class="input-label">Blood Glucose</label>
-            <input type="number" step="0.1" id="glucose" required class="input-field" placeholder="mg/dL">
+            <label class="input-label">Postprandial Blood Sugar (PPBS)</label>
+            <input type="number" step="0.1" id="PPBS_mg_dL" required class="input-field" placeholder="e.g. 145 mg/dL">
           </div>
           <div class="input-group">
-            <label class="input-label">Insulin (Fasting)</label>
-            <input type="number" step="0.1" id="insulin" required class="input-field" placeholder="mIU/L">
+            <label class="input-label">HbA1c</label>
+            <input type="number" step="0.1" id="HbA1c_pct" required class="input-field" placeholder="e.g. 6.5 %">
           </div>
-          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;">
+          <div class="input-group">
+            <label class="input-label">Systolic BP (SBP)</label>
+            <input type="number" id="SBP_mmHg" required class="input-field" placeholder="e.g. 120 mmHg">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Diastolic BP (DBP)</label>
+            <input type="number" id="DBP_mmHg" required class="input-field" placeholder="e.g. 80 mmHg">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Insulin Level</label>
+            <input type="number" step="0.1" id="Insulin_uU_mL" required class="input-field" placeholder="e.g. 15.0 uU/mL">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Physical Activity Score</label>
+            <input type="number" id="Physical_Activity_Score" required class="input-field" placeholder="e.g. 60 (0–100)">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Family History of Diabetes</label>
+            <select id="Family_History" required class="input-field" style="appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select Yes/No</option>
+              <option value="0">No</option>
+              <option value="1">Yes</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">LDL Cholesterol</label>
+            <input type="number" step="0.1" id="LDL_mg_dL" required class="input-field" placeholder="e.g. 120 mg/dL">
+          </div>
+          <div class="input-group">
+            <label class="input-label">HDL Cholesterol</label>
+            <input type="number" step="0.1" id="HDL_mg_dL" required class="input-field" placeholder="e.g. 50 mg/dL">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Triglycerides</label>
+            <input type="number" step="0.1" id="Triglycerides_mg_dL" required class="input-field" placeholder="e.g. 150 mg/dL">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Smoking History</label>
+            <select id="Smoking" required class="input-field" style="appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select Exposure</option>
+              <option value="0">No / Minimal</option>
+              <option value="1">Active / Historical</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Alcohol Consumption</label>
+            <select id="Alcohol" required class="input-field" style="appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select Consumption</option>
+              <option value="0">No / Rare</option>
+              <option value="1">Frequent</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary mt-6" style="width: 100%; justify-content: center; padding: 1rem;">
             Run Intelligence Engine
           </button>
         </form>
@@ -101,11 +153,21 @@
     document.getElementById('health-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const payload = {
-        age: parseInt(document.getElementById('age').value),
-        bmi: parseFloat(document.getElementById('bmi').value),
-        glucose: parseFloat(document.getElementById('glucose').value),
-        insulin: parseFloat(document.getElementById('insulin').value),
-        blood_pressure: parseFloat(document.getElementById('blood_pressure').value)
+        Age: parseInt(document.getElementById('Age').value),
+        BMI: parseFloat(document.getElementById('BMI').value),
+        FBS_mg_dL: parseFloat(document.getElementById('FBS_mg_dL').value),
+        PPBS_mg_dL: parseFloat(document.getElementById('PPBS_mg_dL').value),
+        HbA1c_pct: parseFloat(document.getElementById('HbA1c_pct').value),
+        SBP_mmHg: parseInt(document.getElementById('SBP_mmHg').value),
+        DBP_mmHg: parseInt(document.getElementById('DBP_mmHg').value),
+        Insulin_uU_mL: parseFloat(document.getElementById('Insulin_uU_mL').value),
+        Physical_Activity_Score: parseInt(document.getElementById('Physical_Activity_Score').value),
+        Family_History: parseInt(document.getElementById('Family_History').value),
+        LDL_mg_dL: parseFloat(document.getElementById('LDL_mg_dL').value),
+        HDL_mg_dL: parseFloat(document.getElementById('HDL_mg_dL').value),
+        Triglycerides_mg_dL: parseFloat(document.getElementById('Triglycerides_mg_dL').value),
+        Smoking: parseInt(document.getElementById('Smoking').value),
+        Alcohol: parseInt(document.getElementById('Alcohol').value)
       };
       
       const res = await predictDisease('diabetes', payload);

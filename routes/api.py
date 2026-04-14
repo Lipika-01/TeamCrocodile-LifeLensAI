@@ -11,20 +11,72 @@ from routes.auth import get_current_user
 
 router = APIRouter()
 
-# Schema definitions
 class DiabetesInput(BaseModel):
-    glucose: float
-    bmi: float
-    age: int
-    blood_pressure: float
-    insulin: float
+    Age: int
+    BMI: float
+    FBS_mg_dL: float
+    PPBS_mg_dL: float
+    HbA1c_pct: float
+    SBP_mmHg: int
+    DBP_mmHg: int
+    Insulin_uU_mL: float
+    Physical_Activity_Score: int
+    Family_History: int
+    LDL_mg_dL: float
+    HDL_mg_dL: float
+    Triglycerides_mg_dL: float
+    Smoking: int
+    Alcohol: int
 
 class HypertensionInput(BaseModel):
-    ap_hi: float
-    ap_lo: float
-    bmi: float
-    age: int
-    cholesterol: float
+    Age: int
+    Gender: str
+    SBP: int
+    DBP: int
+    BMI: float
+    Physical_Activity: str
+    Diet_PackagedFood: str
+    Smoking: str
+    Alcohol: str
+    Stress_Level: str
+    Sleep_Duration_hrs: float
+    Family_History_Hypertension: str
+    Diabetes_Status: str
+    LDL_Cholesterol: float
+    HDL_Cholesterol: float
+    Triglycerides: float
+
+class LungCancerInput(BaseModel):
+    Gender: str
+    Age: int
+    Smoking: str
+    Yellow_Fingers: str
+    CEA_ng_mL: float
+    Hemoglobin_g_dL: float
+    WBC_Count_10e3_uL: float
+    Family_History_Cancer: str
+    Chronic_Disease: str
+    Fatigue: str
+    Allergy: str
+    Wheezing: str
+    Alcohol_Consumption: str
+    Coughing: str
+    Shortness_of_Breath: str
+    Swallowing_Difficulty: str
+    Chest_Pain: str
+    Occupational_Exposure_Risk: str
+
+
+class BreastCancerInput(BaseModel):
+    radius_mean: float
+    texture_mean: float
+    perimeter_mean: float
+    area_mean: float
+    smoothness_mean: float
+    compactness_mean: float
+    concavity_mean: float
+    symmetry_mean: float
+    fractal_dimension_mean: float
 
 class HeartDiseaseInput(BaseModel):
     age: int
@@ -76,17 +128,19 @@ def compile_doctor_report(predict_results, data):
         "doctor_report": doc_report
     }
 
+import pandas as pd
+
 @router.post("/predict/diabetes")
 async def predict_diabetes(data: DiabetesInput, current_user: dict = Depends(get_current_user)):
-    result = predictor.predict_diabetes(
-        data.glucose, data.bmi, data.age, data.blood_pressure, data.insulin
-    )
+    df_data = pd.DataFrame([data.dict()])
+    result = predictor.predict_diabetes(df_data)
+    if "error" in result: return {"status": "error", "message": result["error"]}
     
     predict_results = {"diabetes": result}
     input_data = data.dict()
     report = compile_doctor_report(predict_results, input_data)
+    report["ml_metadata"] = result
     
-    # Save to MongoDB
     records_collection.update_one(
         {"user_id": current_user["_id"]},
         {"$set": {"diabetes": {"inputs": input_data, "result": result}}},
@@ -97,13 +151,14 @@ async def predict_diabetes(data: DiabetesInput, current_user: dict = Depends(get
 
 @router.post("/predict/hypertension")
 async def predict_hypertension(data: HypertensionInput, current_user: dict = Depends(get_current_user)):
-    result = predictor.predict_hypertension(
-        data.ap_hi, data.ap_lo, data.bmi, data.age, data.cholesterol
-    )
+    df_data = pd.DataFrame([data.dict()])
+    result = predictor.predict_hypertension(df_data)
+    if "error" in result: return {"status": "error", "message": result["error"]}
     
     predict_results = {"hypertension": result}
     input_data = data.dict()
     report = compile_doctor_report(predict_results, input_data)
+    report["ml_metadata"] = result
     
     records_collection.update_one(
         {"user_id": current_user["_id"]},
@@ -127,6 +182,45 @@ async def predict_heart(data: HeartDiseaseInput, current_user: dict = Depends(ge
     records_collection.update_one(
         {"user_id": current_user["_id"]},
         {"$set": {"heart_disease": {"inputs": input_data, "result": result}}},
+        upsert=True
+    )
+    
+    return {"status": "success", "report": report}
+
+@router.post("/predict/breast-cancer")
+async def predict_breast_cancer(data: BreastCancerInput, current_user: dict = Depends(get_current_user)):
+    result = predictor.predict_breast_cancer(
+        data.radius_mean, data.texture_mean, data.perimeter_mean, data.area_mean, 
+        data.smoothness_mean, data.compactness_mean, data.concavity_mean, 
+        data.symmetry_mean, data.fractal_dimension_mean
+    )
+    
+    predict_results = {"breast_cancer": result}
+    input_data = data.dict()
+    report = compile_doctor_report(predict_results, input_data)
+    
+    records_collection.update_one(
+        {"user_id": current_user["_id"]},
+        {"$set": {"breast_cancer": {"inputs": input_data, "result": result}}},
+        upsert=True
+    )
+    
+    return {"status": "success", "report": report}
+
+@router.post("/predict/lung-cancer")
+async def predict_lung_cancer(data: LungCancerInput, current_user: dict = Depends(get_current_user)):
+    df_data = pd.DataFrame([data.dict()])
+    result = predictor.predict_lung_cancer(df_data)
+    if "error" in result: return {"status": "error", "message": result["error"]}
+    
+    predict_results = {"lung_cancer": result}
+    input_data = data.dict()
+    report = compile_doctor_report(predict_results, input_data)
+    report["ml_metadata"] = result
+    
+    records_collection.update_one(
+        {"user_id": current_user["_id"]},
+        {"$set": {"lung_cancer": {"inputs": input_data, "result": result}}},
         upsert=True
     )
     

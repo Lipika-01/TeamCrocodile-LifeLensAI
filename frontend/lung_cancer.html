@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lung Carcinoma Risk - LifeLensAI</title>
+  <link rel="stylesheet" href="css/index.css">
+  <style>
+    .split-layout { display: grid; grid-template-columns: 380px 1fr; gap: 3rem; margin-top: 3rem; align-items: start; }
+    .input-sidebar { padding: 2.5rem; position: sticky; top: 120px; max-height: calc(100vh - 140px); overflow-y: auto; }
+    .results-area { min-height: 800px; }
+    .metric-bubble { padding: 1.5rem; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; }
+    .rec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+    
+    /* Scrollbar for sidebar */
+    .input-sidebar::-webkit-scrollbar { width: 6px; }
+    .input-sidebar::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 10px; }
+    
+    @media (max-width: 1024px) {
+      .split-layout { grid-template-columns: 1fr; }
+      .input-sidebar { position: static; max-height: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="main-header"></header>
+
+  <main class="container">
+    <div class="split-layout">
+      
+      <!-- Left: Inputs -->
+      <aside class="glass-card input-sidebar animate-slide-up">
+        <h3 class="mb-2">Module Inputs</h3>
+        <p class="text-muted mb-8" style="font-size: 0.9rem;">Provide respiratory and lifestyle parameters for AI evaluation.</p>
+        
+        <form id="health-form">
+          <div class="input-group">
+            <label class="input-label">Gender</label>
+            <select id="Gender" required class="input-field" style="appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select Gender</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+            </select>
+          </div>
+          <div class="input-group"><label class="input-label">Age</label><input type="number" id="Age" required class="input-field" placeholder="e.g. 55"></div>
+          <div class="input-group">
+            <label class="input-label">Smoking</label>
+            <select id="Smoking" required class="input-field" style="appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select Yes/No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Yellow Fingers</label>
+            <select id="Yellow_Fingers" required class="input-field" style="appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select Yes/No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="input-group"><label class="input-label">CEA (ng/mL)</label><input type="number" step="0.1" id="CEA_ng_mL" required class="input-field" placeholder="e.g. 3.5 ng/mL"></div>
+          <div class="input-group"><label class="input-label">Hemoglobin (g/dL)</label><input type="number" step="0.1" id="Hemoglobin_g_dL" required class="input-field" placeholder="e.g. 13.5 g/dL"></div>
+          <div class="input-group"><label class="input-label">WBC Count (10^3/uL)</label><input type="number" step="0.1" id="WBC_Count_10e3_uL" required class="input-field" placeholder="e.g. 7.2 x10³/μL"></div>
+          <div class="input-group">
+            <label class="input-label">Family History of Cancer</label>
+            <select id="Family_History_Cancer" required class="input-field" style="appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select Yes/No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Chronic Disease</label>
+            <select id="Chronic_Disease" required class="input-field" style="appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select Yes/No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Fatigue</label>
+            <select id="Fatigue" required class="input-field" style="appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select Yes/No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Allergy</label>
+            <select id="Allergy" required class="input-field" style="appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select Yes/No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Wheezing</label>
+            <select id="Wheezing" required class="input-field" style="appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select Yes/No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Alcohol Consumption</label>
+            <select id="Alcohol_Consumption" required class="input-field" style="appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select Yes/No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Coughing</label>
+            <select id="Coughing" required class="input-field" style="appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select Yes/No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Shortness of Breath</label>
+            <select id="Shortness_of_Breath" required class="input-field" style="appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select Yes/No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Swallowing Difficulty</label>
+            <select id="Swallowing_Difficulty" required class="input-field" style="appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select Yes/No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Chest Pain</label>
+            <select id="Chest_Pain" required class="input-field" style="appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select Yes/No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Occupational Exposure Risk</label>
+            <select id="Occupational_Exposure_Risk" required class="input-field" style="appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select Risk Level</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+          
+          <button type="submit" class="btn btn-primary mt-6" style="width: 100%; justify-content: center; padding: 1rem;">
+            Run Intelligence Engine
+          </button>
+        </form>
+      </aside>
+
+      <!-- Right: Results -->
+      <div class="results-area">
+        <div id="empty-state" class="glass-card flex flex-col items-center justify-center text-center animate-slide-up" style="height: 400px; padding: 3rem;">
+          <div style="font-size: 3rem; margin-bottom: 1.5rem; opacity: 0.5;">🫁</div>
+          <h2>Ready for Intelligence Analysis</h2>
+          <p class="text-muted mt-2" style="max-width: 400px;">Please populate the respiratory and lifestyle indicators on the left to generate your flagship medical report.</p>
+        </div>
+
+        <div id="full-dashboard" class="hidden">
+          <div id="risk-alerts"></div>
+          
+          <div id="predictions-grid" class="flex gap-6 mb-8"></div>
+
+          <div class="glass-card mb-8">
+            <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-subtle);">
+              <h3 style="font-size: 1.1rem;">Respiratory Metrics Interpretation</h3>
+            </div>
+            <div id="metrics-analysis"></div>
+          </div>
+
+          <h3 class="mb-6 mt-12 flex items-center gap-3">
+             <span style="padding: 10px; background: var(--secondary-pink); border-radius: 12px; color: var(--primary-crimson);">🛡️</span>
+             AI Intelligence Report
+          </h3>
+          <div class="rec-grid" id="recommendations-grid"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/report.js"></script>
+  <script>
+    document.getElementById('health-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const payload = {
+        Gender: document.getElementById('Gender').value,
+        Age: parseInt(document.getElementById('Age').value),
+        Smoking: document.getElementById('Smoking').value,
+        Yellow_Fingers: document.getElementById('Yellow_Fingers').value,
+        CEA_ng_mL: parseFloat(document.getElementById('CEA_ng_mL').value),
+        Hemoglobin_g_dL: parseFloat(document.getElementById('Hemoglobin_g_dL').value),
+        WBC_Count_10e3_uL: parseFloat(document.getElementById('WBC_Count_10e3_uL').value),
+        Family_History_Cancer: document.getElementById('Family_History_Cancer').value,
+        Chronic_Disease: document.getElementById('Chronic_Disease').value,
+        Fatigue: document.getElementById('Fatigue').value,
+        Allergy: document.getElementById('Allergy').value,
+        Wheezing: document.getElementById('Wheezing').value,
+        Alcohol_Consumption: document.getElementById('Alcohol_Consumption').value,
+        Coughing: document.getElementById('Coughing').value,
+        Shortness_of_Breath: document.getElementById('Shortness_of_Breath').value,
+        Swallowing_Difficulty: document.getElementById('Swallowing_Difficulty').value,
+        Chest_Pain: document.getElementById('Chest_Pain').value,
+        Occupational_Exposure_Risk: document.getElementById('Occupational_Exposure_Risk').value
+      };
+      
+      const res = await predictDisease('lung-cancer', payload);
+      if(res && res.status === 'success') renderDoctorReport(res.report);
+    });
+  </script>
+</body>
+</html>
