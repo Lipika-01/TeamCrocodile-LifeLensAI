@@ -1,6 +1,27 @@
 const API_URL = 'http://localhost:8000/api';
 
+// Auth Guard Logic
+const protectedRoutes = ['dashboard.html', 'diabetes.html', 'hypertension.html', 'heart.html', 'lung_cancer.html', 'breast_cancer.html'];
+const publicOnlyRoutes = ['login.html', 'register.html'];
+
+function checkAuth() {
+  const token = localStorage.getItem('token');
+  const currentPath = window.location.pathname.split('/').pop();
+
+  if (protectedRoutes.includes(currentPath) && !token) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  if (publicOnlyRoutes.includes(currentPath) && token) {
+    window.location.href = 'dashboard.html';
+    return;
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  checkAuth();
+  
   const loginForm = document.getElementById('login-form');
   const registerForm = document.getElementById('register-form');
 
@@ -27,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } catch (err) {
         console.error(err);
+        alert('An error occurred during login.');
       }
     });
   }
@@ -55,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } catch (err) {
         console.error(err);
+        alert('An error occurred during registration.');
       }
     });
   }

@@ -424,3 +424,106 @@ body {
 .mb-8 { margin-bottom: 2rem; }
 .p-4 { padding: 1rem; }
 .overflow-hidden { overflow: hidden; }
+
+/* Landing Page Sections */
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 4rem;
+  letter-spacing: -1px;
+}
+
+.how-it-works-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  margin-bottom: 8rem;
+}
+
+.step-card {
+  padding: 2.5rem 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.step-number {
+  color: var(--primary-crimson);
+  font-weight: 800;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.step-icon {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+}
+
+.step-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--text-main);
+}
+
+.step-card p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.disease-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2.5rem;
+}
+
+.disease-card {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.disease-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--primary-crimson);
+}
+
+.disease-card p {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-main);
+}
+
+.disease-details {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 1.5rem;
+  margin-top: auto;
+}
+
+.detail-item {
+  margin-bottom: 1rem;
+}
+
+.detail-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.detail-content {
+  font-size: 0.9rem;
+  color: var(--text-main);
+}
+
+@media (max-width: 768px) {
+  .section-title { font-size: 2rem; }
+  .disease-info-grid { grid-template-columns: 1fr; }
+}

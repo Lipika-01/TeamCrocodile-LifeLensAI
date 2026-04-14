@@ -31,43 +31,65 @@ const UI = {
 
     const currentPath = window.location.pathname;
     const isDashboard = currentPath.includes('dashboard');
+    const token = localStorage.getItem('token');
     const username = localStorage.getItem('username') || 'Member';
     const initial = username.charAt(0).toUpperCase();
 
+    let navContent = '';
+    
+    if (token) {
+      navContent = `
+        <a href="dashboard.html" class="nav-link ${isDashboard ? 'active' : ''}">
+          ${this.icons.dashboard} Dashboard
+        </a>
+        
+        <button id="theme-btn" class="theme-toggle">
+          ${localStorage.getItem('theme') === 'dark' ? this.icons.sun : this.icons.moon}
+        </button>
+
+        <div class="user-identity">
+          <div class="user-avatar">${initial}</div>
+          <div style="display: flex; flex-direction: column;">
+            <span style="font-size: 0.8rem; font-weight: 600;">${username}</span>
+            <button id="logout-btn" 
+                    style="background: none; border: none; color: var(--primary-crimson); font-size: 0.7rem; cursor: pointer; padding: 0; text-align: left; font-weight: 700;">
+                Sign Out
+            </button>
+          </div>
+        </div>
+      `;
+    } else {
+      navContent = `
+        <a href="login.html" class="nav-link">Sign In</a>
+        <a href="register.html" class="btn btn-primary" style="padding: 0.5rem 1.2rem; font-size: 0.85rem;">Get Started</a>
+        <button id="theme-btn" class="theme-toggle">
+          ${localStorage.getItem('theme') === 'dark' ? this.icons.sun : this.icons.moon}
+        </button>
+      `;
+    }
+
     header.innerHTML = `
       <div class="header-inner animate-slide-up">
-        <div class="logo-container flex items-center gap-2" style="cursor:pointer;" onclick="window.location.href='dashboard.html'">
+        <div class="logo-container flex items-center gap-2" style="cursor:pointer;" onclick="window.location.href='index.html'">
           <div style="background: var(--primary-crimson); color: white; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700;">L</div>
           <h1 class="text-gradient" style="font-size: 1.3rem; letter-spacing: -0.5px;">LifeLens<span style="color: var(--text-main); font-weight: 400;">AI</span></h1>
         </div>
         
         <nav class="nav-links">
-          <a href="dashboard.html" class="nav-link ${isDashboard ? 'active' : ''}">
-            ${this.icons.dashboard} Dashboard
-          </a>
-          <a href="history.html" class="nav-link ${currentPath.includes('history') ? 'active' : ''}">
-            ${this.icons.history} Intelligence History
-          </a>
-          
-          <button id="theme-btn" class="theme-toggle">
-            ${localStorage.getItem('theme') === 'dark' ? this.icons.sun : this.icons.moon}
-          </button>
-
-          <div class="user-identity">
-            <div class="user-avatar">${initial}</div>
-            <div style="display: flex; flex-direction: column;">
-              <span style="font-size: 0.8rem; font-weight: 600;">${username}</span>
-              <button onclick="localStorage.removeItem('token'); window.location.href='index.html'" 
-                      style="background: none; border: none; color: var(--primary-crimson); font-size: 0.7rem; cursor: pointer; padding: 0; text-align: left; font-weight: 700;">
-                  Sign Out
-              </button>
-            </div>
-          </div>
+          ${navContent}
         </nav>
       </div>
     `;
 
     document.getElementById('theme-btn').addEventListener('click', () => this.toggleTheme());
+    
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', () => {
+        localStorage.clear();
+        window.location.href = 'index.html';
+      });
+    }
   },
 
   renderFooter() {

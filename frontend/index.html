@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LifeLensAI - Healthcare Intelligence Platform</title>
+  <title>LifeLensAI - Premium Healthcare Intelligence</title>
   <link rel="stylesheet" href="css/index.css">
   <style>
-    .hero-section { min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .hero-section { min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin-bottom: 4rem; }
     .hero-title { font-size: 4.5rem; line-height: 1.1; margin-bottom: 2rem; letter-spacing: -2px; }
     .hero-subtitle { max-width: 600px; margin-bottom: 3rem; font-size: 1.25rem; }
   </style>
@@ -16,26 +16,151 @@
   <header class="main-header"></header>
 
   <main class="container">
+    <!-- Hero Section -->
     <div class="hero-section animate-slide-up">
       <div style="padding: 10px 20px; background: var(--secondary-pink); border-radius: 100px; color: var(--primary-crimson); font-weight: 600; font-size: 0.85rem; margin-bottom: 2rem; border: 1px solid var(--primary-pink);">
-        ✨ Now Powered by Google Gemini AI
+        ✨ Now Powered by Google Gemini Pro
       </div>
       <h1 class="hero-title">Predictive Health.<br><span class="text-gradient">Redefined for You.</span></h1>
       <p class="hero-subtitle subtitle">Connect your clinical metrics to a world-class AI intelligence engine. Get doctor-level insights, dynamic routines, and proactive monitoring plans.</p>
       
       <div class="flex gap-4">
-        <a href="register.html" class="btn btn-primary" style="padding: 1rem 2rem;">Get Started Free</a>
-        <a href="login.html" class="btn btn-outline" style="padding: 1rem 2rem;">Sign In</a>
+        <a href="register.html" class="btn btn-primary" style="padding: 1rem 2.5rem; font-size: 1.1rem;">Get Started Free</a>
+        <a href="login.html" class="btn btn-outline" style="padding: 1rem 2.5rem; font-size: 1.1rem;">Sign In to Portal</a>
       </div>
 
       <div class="flex gap-12 mt-12" style="opacity: 0.6;">
-        <div class="flex items-center gap-2"><span>🛡️</span> HIPAA Compliant Privacy</div>
-        <div class="flex items-center gap-2"><span>⚡</span> Real-time AI Analysis</div>
-        <div class="flex items-center gap-2"><span>📊</span> Clinical Data Reuse</div>
+        <div class="flex items-center gap-2"><span>🛡️</span> HIPAA Compliant</div>
+        <div class="flex items-center gap-2"><span>⚡</span> Real-time Analysis</div>
+        <div class="flex items-center gap-2"><span>📊</span> Clinical Data Synthesis</div>
       </div>
     </div>
+
+    <!-- How It Works Section -->
+    <section class="mt-8 mb-12 animate-slide-up">
+      <h2 class="section-title">How It Works</h2>
+      <div class="how-it-works-grid">
+        <div class="glass-card step-card">
+          <span class="step-number">Step 01</span>
+          <div class="step-icon">📝</div>
+          <h3>Input Data</h3>
+          <p>Manually enter your clinical parameters or upload your latest medical reports for extraction.</p>
+        </div>
+        <div class="glass-card step-card">
+          <span class="step-number">Step 02</span>
+          <div class="step-icon">⚙️</div>
+          <h3>AI Processing</h3>
+          <p>Our intelligence engine clean and standardizes your parameters for high-precision inference.</p>
+        </div>
+        <div class="glass-card step-card">
+          <span class="step-number">Step 03</span>
+          <div class="step-icon">🧠</div>
+          <h3>ML Risk Analysis</h3>
+          <p>Validated machine learning models evaluate your risk across multiple disease modules.</p>
+        </div>
+        <div class="glass-card step-card">
+          <span class="step-number">Step 04</span>
+          <div class="step-icon">📄</div>
+          <h3>Report Generation</h3>
+          <p>A comprehensive, easy-to-read health intelligence report is generated instantly.</p>
+        </div>
+        <div class="glass-card step-card">
+          <span class="step-number">Step 05</span>
+          <div class="step-icon">🎯</div>
+          <h3>Actionable Insights</h3>
+          <p>Receive personalized recommendations for diet, exercise, and clinical monitoring.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Disease Information Section -->
+    <section class="mt-8 mb-12 animate-slide-up">
+      <h2 class="section-title">Global Health Intelligence</h2>
+      <div class="disease-info-grid">
+        <!-- Diabetes -->
+        <div class="glass-card disease-card">
+          <h3>Diabetes Mellitus</h3>
+          <p>A chronic condition affecting how your body turns food into energy, characterized by high blood glucose levels.</p>
+          <div class="disease-details">
+            <div class="detail-item">
+              <span class="detail-label">Risk Factors</span>
+              <span class="detail-content">Obesity, sedentary lifestyle, family history, and high blood pressure.</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Common Symptoms</span>
+              <span class="detail-content">Increased thirst, frequent urination, fatigue, and blurred vision.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hypertension -->
+        <div class="glass-card disease-card">
+          <h3>Hypertension</h3>
+          <p>Commonly known as high blood pressure, this condition increases the force of blood against your artery walls.</p>
+          <div class="disease-details">
+            <div class="detail-item">
+              <span class="detail-label">Risk Factors</span>
+              <span class="detail-content">High salt intake, stress, smoking, and lack of physical activity.</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Common Symptoms</span>
+              <span class="detail-content">Often asymptomatic (The Silent Killer), but can cause headaches or chest pain.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Heart Disease -->
+        <div class="glass-card disease-card">
+          <h3>Heart Disease</h3>
+          <p>A range of conditions that affect your heart's ability to function correctly, including coronary artery disease.</p>
+          <div class="disease-details">
+            <div class="detail-item">
+              <span class="detail-label">Risk Factors</span>
+              <span class="detail-content">High cholesterol, diabetes, smoking, and age.</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Common Symptoms</span>
+              <span class="detail-content">Shortness of breath, chest discomfort, and numbness in limbs.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lung Cancer -->
+        <div class="glass-card disease-card">
+          <h3>Lung Cancer</h3>
+          <p>A malignant tumor that starts in the lungs, often linked to long-term exposure to inhaled toxins.</p>
+          <div class="disease-details">
+            <div class="detail-item">
+              <span class="detail-label">Risk Factors</span>
+              <span class="detail-content">Smoking (primary), secondhand smoke, and occupational exposure.</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Common Symptoms</span>
+              <span class="detail-content">Persistent cough, coughing blood, and unexplained weight loss.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Breast Cancer -->
+        <div class="glass-card disease-card">
+          <h3>Breast Cancer</h3>
+          <p>Cancer that forms in the cells of the breasts, most common in women but can occur in men.</p>
+          <div class="disease-details">
+            <div class="detail-item">
+              <span class="detail-label">Risk Factors</span>
+              <span class="detail-content">Genetic mutations (BRCA1/BRCA2), age, and dense breast tissue.</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Common Symptoms</span>
+              <span class="detail-content">Lump in the breast, skin changes (dimpling), or unusual discharge.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script src="js/components.js"></script>
+  <script src="js/auth.js"></script>
 </body>
 </html>

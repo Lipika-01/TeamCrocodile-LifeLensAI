@@ -86,6 +86,12 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
             headers={"WWW-Authenticate": "Bearer"},
         )
     
+    # Update last login timestamp
+    users_collection.update_one(
+        {"_id": user["_id"]},
+        {"$set": {"last_login": datetime.utcnow()}}
+    )
+    
     access_token = create_access_token(data={"sub": user["username"], "id": str(user["_id"])})
     return {"access_token": access_token, "token_type": "bearer"}
 
