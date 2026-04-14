@@ -5,6 +5,8 @@
 
 LifeLensAI is a flagship healthcare intelligence system designed to provide proactive diagnostic insights through a high-fidelity "Medical Minimalism" interface. By synthesizing clinical benchmarks and physiological data through advanced Machine Learning models, the platform empowers users to monitor and mitigate health risks with AI-driven precision.
 
+## Drive link  
+https://drive.google.com/file/d/1zJcTXp-qW4kIJuA9xCs7VLeS5ITvqydI/view?usp=drive_link
 ## 🚀 Key Features
 
 *   **Global Health Intelligence Hub:** Interactive Draggable Ticker featuring bespoke 3D medical visuals for core disease modules.
