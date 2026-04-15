@@ -26,14 +26,11 @@ wheels/
 .flaskenv
 secrets.json
 
-# Models & Large Data
-models/*.pkl
-models/*.h5
-models/*.joblib
-models/*.onnx
-!models/.gitkeep
-datasets/*.csv
-datasets/*.zip
+# Large Data (datasets excluded — models tracked via Git LFS)
+datasets/
+backend/datasets/
+backend/datasets/**
+uploads/*
 uploads/*
 
 # System Files

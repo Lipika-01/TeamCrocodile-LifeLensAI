@@ -1,7 +1,16 @@
 const API_URL = 'http://localhost:8000/api';
 
 // Auth Guard Logic
-const protectedRoutes = ['dashboard.html', 'diabetes.html', 'hypertension.html', 'heart.html', 'lung_cancer.html', 'breast_cancer.html'];
+const protectedRoutes = [
+  'dashboard.html', 
+  'diabetes.html', 
+  'hypertension.html', 
+  'heart.html', 
+  'lung_cancer.html', 
+  'breast_cancer.html',
+  'breast_cancer_imaging.html',
+  'brain_tumor_imaging.html'
+];
 const publicOnlyRoutes = ['login.html', 'register.html'];
 
 function checkAuth() {

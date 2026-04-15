@@ -55,7 +55,7 @@ const ReportUI = {
       const label = result.prediction || result.risk_level || 'Analysed';
 
       grid.innerHTML += `
-        <div class="glass-card" style="padding: 2rem; flex: 1; border-left: 4px solid var(--${status});">
+        <div class="glass-card card-border-none" style="padding: 2.5rem; flex: 1; border-left: 6px solid var(--${status}); margin-bottom: 2rem;">
           <div class="flex justify-between items-start mb-6">
             <div>
               <p class="input-label" style="margin-bottom: 4px;">Diagnostic Result</p>
@@ -120,7 +120,7 @@ const ReportUI = {
       const items = Array.isArray(data) ? data : [data];
 
       grid.innerHTML += `
-        <div class="glass-card animate-slide-up" style="padding: 1.5rem; height: 100%;">
+        <div class="glass-card card-border-none animate-slide-up" style="padding: 1.5rem; height: 100%;">
           <div class="flex items-center gap-3 mb-6" style="color: var(--primary-crimson);">
             <div style="padding: 10px; background: var(--secondary-pink); border-radius: 12px; color: var(--primary-crimson);">
               ${s.icon}

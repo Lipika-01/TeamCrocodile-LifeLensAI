@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brain Neuro-Suite - LifeLensAI</title>
+  <link rel="stylesheet" href="css/index.css">
+  <style>
+    .upload-container { max-width: 800px; margin: 4rem auto; }
+    .drop-zone { border: 2px dashed var(--primary-pink); background: rgba(220, 20, 60, 0.02); padding: 5rem; border-radius: 30px; text-align: center; transition: all 0.3s ease; cursor: pointer; position: relative; overflow: hidden; }
+    .drop-zone:hover { background: rgba(220, 20, 60, 0.05); border-color: var(--primary-crimson); }
+    .drop-zone.drag-over { background: rgba(220, 20, 60, 0.1); border-style: solid; }
+    #image-preview { max-width: 100%; border-radius: 20px; display: none; margin: 2rem auto; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    
+    .result-section { display: none; margin-top: 4rem; }
+    .confidence-bar-container { height: 12px; background: rgba(0,0,0,0.05); border-radius: 6px; overflow: hidden; margin: 1.5rem 0; }
+    .confidence-bar { height: 100%; background: var(--primary-crimson); width: 0%; transition: width 1s ease-out; }
+    
+    .status-badge { display: inline-block; padding: 0.5rem 1rem; border-radius: 100px; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 1rem; }
+    .status-high { background: rgba(220, 20, 60, 0.1); color: var(--primary-crimson); }
+    .status-medium { background: rgba(241, 196, 15, 0.1); color: #f1c40f; }
+    .status-low { background: rgba(46, 204, 113, 0.1); color: #2ecc71; }
+    
+    .pulse-animation { animation: pulse 2s infinite; }
+    @keyframes pulse { 
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.02); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="main-header"></header>
+
+  <main class="container">
+    <div class="text-center animate-slide-up" style="margin-top: 4rem;">
+      <h1 style="font-size: 3.5rem; letter-spacing: -2px; margin-bottom: 1rem;">Brain Neuro-Suite</h1>
+      <p class="text-muted" style="max-width: 600px; margin: 0 auto 3rem auto;">Advanced structural MRI evaluation for clinical mass detection and classification of neuro-oncology patterns.</p>
+    </div>
+
+    <div class="upload-container animate-slide-up" style="animation-delay: 0.1s;">
+      <div class="glass-card drop-zone" id="drop-zone">
+        <div id="upload-prompt">
+          <span style="font-size: 4rem; display: block; margin-bottom: 1.5rem;">🧠</span>
+          <h3>Upload MRI Scan</h3>
+          <p class="text-muted mt-2">Selection: Glioma, Meningioma, Pituitary, or No Tumor detection</p>
+        </div>
+        <img id="image-preview" alt="Scan Preview">
+        <input type="file" id="file-input" accept="image/*" class="hidden">
+      </div>
+      
+      <div class="text-center mt-8">
+        <button id="analyze-btn" class="btn btn-primary" style="padding: 1.2rem 3rem; display: none;">Start Neuro-Analysis</button>
+      </div>
+    </div>
+
+    <!-- Results Area -->
+    <section class="result-section animate-slide-up" id="results">
+      <div style="display: grid; grid-template-columns: 1fr; gap: 3rem; max-width: 1000px; margin: 0 auto;">
+        
+        <!-- Summary Card -->
+        <div class="glass-card card-border-none" style="padding: 3rem;">
+          <div id="risk-badge" class="status-badge"></div>
+          <h4 class="detail-label">Classification Result</h4>
+          <h2 id="prediction-text" style="font-size: 2.5rem; margin-bottom: 1rem; text-transform: capitalize;">Glioma</h2>
+          <p id="explanation-text" class="text-muted mb-6"></p>
+          
+          <div class="detail-label">Categorical Confidence</div>
+          <div class="confidence-bar-container">
+            <div class="confidence-bar" id="confidence-bar"></div>
+          </div>
+          <div class="flex justify-between" style="font-weight: 600;">
+            <span id="confidence-score">0%</span>
+            <span>Clinical Neuro-Precision</span>
+          </div>
+
+          <!-- New: Neuro Analysis Matrix -->
+          <div style="margin-top: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; border-top: 1px solid var(--border-subtle); padding-top: 2rem;">
+            <div class="stat-box">
+              <span class="detail-label">Neuro Density (v/mm³)</span>
+              <h4 id="neuro-density-val" style="font-size: 1.4rem;">0%</h4>
+              <span style="font-size: 0.75rem; color: var(--safe);">Stable Index</span>
+            </div>
+            <div class="stat-box">
+              <span class="detail-label">Asymmetry Index (α)</span>
+              <h4 id="asymmetry-val" style="font-size: 1.4rem;">0.0</h4>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Hemispheric Match</span>
+            </div>
+            <div class="stat-box">
+              <span class="detail-label">Tissue Contrast (SNR)</span>
+              <h4 id="contrast-val" style="font-size: 1.4rem;">0.0</h4>
+              <span style="font-size: 0.75rem; color: var(--safe);">High Clarity</span>
+            </div>
+            <div class="stat-box">
+              <span class="detail-label">Localization Index (L)</span>
+              <h4 id="localization-val" style="font-size: 1.4rem;">0.0</h4>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Region Focus</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Guidance Card -->
+        <div class="glass-card card-border-none" style="border-top: 4px solid var(--primary-crimson); padding: 3rem;">
+          <h3 class="mb-4">Neuro-Clinical Guidance</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li class="mb-4 flex gap-4">
+              <span style="color: var(--primary-crimson); font-weight: 900;">•</span>
+              <span>Schedule a contrast-enhanced MRI follow-up to provide deeper structural clarity.</span>
+            </li>
+            <li class="mb-4 flex gap-4">
+              <span style="color: var(--primary-crimson); font-weight: 900;">•</span>
+              <span>A consultation with a Neuro-Oncologist is recommended to interpret these patterns.</span>
+            </li>
+            <li class="mb-4 flex gap-4">
+              <span style="color: var(--primary-crimson); font-weight: 900;">•</span>
+              <span>Monitor for associated symptoms such as localized neurological deficits or persistent headaches.</span>
+            </li>
+          </ul>
+          
+          <div class="glass-card mt-8" style="background: rgba(0,0,0,0.03); padding: 1.5rem; border: none;">
+            <p style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">
+              ⚠️ AI DISCLAIMER: This evaluation is performed by a machine learning model for informational purposes and is not a clinical diagnosis.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="main-footer"></footer>
+
+  <script src="js/components.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const imagePreview = document.getElementById('image-preview');
+    const uploadPrompt = document.getElementById('upload-prompt');
+    const analyzeBtn = document.getElementById('analyze-btn');
+    const resultsArea = document.getElementById('results');
+
+    dropZone.onclick = () => fileInput.click();
+
+    fileInput.onchange = (e) => handleFile(e.target.files[0]);
+
+    dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); };
+    dropZone.ondragleave = () => dropZone.classList.remove('drag-over');
+    dropZone.ondrop = (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      handleFile(e.dataTransfer.files[0]);
+    };
+
+    function handleFile(file) {
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          imagePreview.src = e.target.result;
+          imagePreview.style.display = 'block';
+          uploadPrompt.style.display = 'none';
+          analyzeBtn.style.display = 'inline-block';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    analyzeBtn.onclick = async () => {
+      analyzeBtn.disabled = true;
+      analyzeBtn.textContent = 'Synchronizing Neuro-Intelligence...';
+      analyzeBtn.classList.add('pulse-animation');
+
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:8000/api/predict/brain-tumor', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: formData
+        });
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            alert('Session expired. Please login again.');
+            window.location.href = 'login.html';
+            return;
+          }
+          throw new Error('Neuro-Analysis failed');
+        }
+
+        const data = await response.json();
+        
+        // Display Results
+        resultsArea.style.display = 'block';
+        document.getElementById('prediction-text').textContent = data.prediction;
+        document.getElementById('explanation-text').textContent = data.explanation;
+        document.getElementById('confidence-score').textContent = `${(data.confidence * 100).toFixed(0)}%`;
+        document.getElementById('confidence-bar').style.width = `${data.confidence * 100}%`;
+        
+        // Populate Neuro Matrix
+        document.getElementById('neuro-density-val').textContent = `${data.analysis.neuro_density}%`;
+        document.getElementById('asymmetry-val').textContent = data.analysis.structural_asymmetry.toFixed(2);
+        document.getElementById('contrast-val').textContent = data.analysis.tissue_contrast.toFixed(1);
+        document.getElementById('localization-val').textContent = data.analysis.localization_index.toFixed(1);
+        
+        const badge = document.getElementById('risk-badge');
+        badge.textContent = `${data.risk_level} Severity Indicator`;
+        badge.className = `status-badge status-${data.risk_level.toLowerCase()}`;
+
+        resultsArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      } catch (error) {
+        alert('Neuro-Engine unavailable. Ensure brain_tumor_model.h5 is deployed.');
+      } finally {
+        analyzeBtn.disabled = false;
+        analyzeBtn.textContent = 'Relaunch Neuro-Analysis';
+        analyzeBtn.classList.remove('pulse-animation');
+      }
+    };
+  </script>
+</body>
+</html>

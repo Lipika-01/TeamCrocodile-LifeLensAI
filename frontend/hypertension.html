@@ -16,7 +16,7 @@
   <header class="main-header"></header>
   <main class="container">
     <div class="split-layout">
-      <aside class="glass-card input-sidebar animate-slide-up" style="padding: 0;">
+      <aside class="glass-card card-border-none input-sidebar animate-slide-up" style="padding: 0;">
         <div class="card-visual" style="height: 180px; border-radius: 20px 20px 0 0;">
           <img src="assets/branding/hypertension.png" alt="Hypertension">
         </div>
@@ -119,8 +119,8 @@
         </div>
         <div id="full-dashboard" class="hidden">
           <div id="risk-alerts"></div>
-          <div id="predictions-grid" class="flex gap-6 mb-8"></div>
-          <div class="glass-card mb-8">
+          <div id="predictions-grid" class="flex flex-col gap-6 mb-8"></div>
+          <div class="glass-card card-border-none mb-8">
             <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-subtle);"><h3 style="font-size: 1.1rem;">Arterial Health Interpretation</h3></div>
             <div id="metrics-analysis"></div>
           </div>
@@ -162,13 +162,35 @@
     const dropZone = document.getElementById('drop-zone');
     dropZone.onclick = () => fileInput.click();
     fileInput.onchange = async (e) => {
+      const dropText = dropZone.querySelector('p');
+      dropText.textContent = 'Extracting Clinical Data...';
+      
       const data = await extractPDFData(e.target.files[0]);
-      if(data && data.status === 'success') {
+      console.log('Hypertension PDF Extraction Result:', data);
+      
+      if(data && data.status === 'success' && Object.keys(data.data).length > 0) {
         const d = data.data;
-        if(d.age) document.getElementById('age').value = d.age;
-        if(d.bmi) document.getElementById('bmi').value = d.bmi;
-        if(d.ap_hi) document.getElementById('ap_hi').value = d.ap_hi;
-        if(d.ap_lo) document.getElementById('ap_lo').value = d.ap_lo;
+        // Mapping with correct case-sensitive IDs for Hypertension
+        const fields = ['Age', 'BMI', 'SBP', 'DBP', 'LDL_Cholesterol', 'HDL_Cholesterol', 'Triglycerides'];
+        let filledCount = 0;
+        
+        fields.forEach(f => {
+          if(d[f] !== undefined) {
+            document.getElementById(f).value = d[f];
+            filledCount++;
+          }
+        });
+        
+        dropText.textContent = `✅ ${filledCount} Clinical Markers Extracted`;
+        dropZone.style.borderColor = 'var(--safe)';
+        setTimeout(() => {
+          dropText.textContent = 'Extract from Report';
+          dropZone.style.borderColor = 'var(--primary-pink)';
+        }, 3000);
+      } else {
+        dropText.textContent = '⚠️ No markers found in PDF';
+        if(typeof showError === 'function') showError('Could not find Hypertension markers (SBP, DBP, BMI, etc.) in this PDF.');
+        setTimeout(() => dropText.textContent = 'Extract from Report', 3000);
       }
     }
   </script>

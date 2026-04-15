@@ -26,7 +26,7 @@
     <div class="split-layout">
       
       <!-- Left: Inputs -->
-      <aside class="glass-card input-sidebar animate-slide-up" style="padding: 0;">
+      <aside class="glass-card card-border-none input-sidebar animate-slide-up" style="padding: 0;">
         <div class="card-visual" style="height: 180px; border-radius: 20px 20px 0 0;">
           <img src="assets/branding/diabetes.png" alt="Diabetes">
         </div>
@@ -183,13 +183,35 @@
     const dropZone = document.getElementById('drop-zone');
     dropZone.onclick = () => fileInput.click();
     fileInput.onchange = async (e) => {
+      const dropText = dropZone.querySelector('p');
+      dropText.textContent = 'Extracting Data...';
+      
       const data = await extractPDFData(e.target.files[0]);
-      if(data && data.status === 'success') {
+      console.log('PDF Extraction Result:', data);
+      
+      if(data && data.status === 'success' && Object.keys(data.data).length > 0) {
         const d = data.data;
-        if(d.age) document.getElementById('age').value = d.age;
-        if(d.bmi) document.getElementById('bmi').value = d.bmi;
-        if(d.glucose) document.getElementById('glucose').value = d.glucose;
-        if(d.ap_hi) document.getElementById('blood_pressure').value = d.ap_hi;
+        // Mapping with correct case-sensitive IDs
+        const fields = ['Age', 'BMI', 'FBS_mg_dL', 'HbA1c_pct', 'SBP_mmHg', 'DBP_mmHg', 'LDL_mg_dL', 'HDL_mg_dL', 'Triglycerides_mg_dL'];
+        let filledCount = 0;
+        
+        fields.forEach(f => {
+          if(d[f] !== undefined) {
+            document.getElementById(f).value = d[f];
+            filledCount++;
+          }
+        });
+        
+        dropText.textContent = `✅ ${filledCount} Metrics Extracted`;
+        dropZone.style.borderColor = 'var(--safe)';
+        setTimeout(() => {
+          dropText.textContent = 'Extract from Report';
+          dropZone.style.borderColor = 'var(--primary-pink)';
+        }, 3000);
+      } else {
+        dropText.textContent = '⚠️ No metrics found in PDF';
+        if(typeof showError === 'function') showError('The AI could not identify standard medical markers (Age, BMI, BP, etc.) in this PDF. Ensure the text is selectable.');
+        setTimeout(() => dropText.textContent = 'Extract from Report', 3000);
       }
     }
   </script>

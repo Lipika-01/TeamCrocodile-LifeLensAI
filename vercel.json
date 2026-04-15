@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "name": "lifelens-ai-frontend",
+  "builds": [
+    {
+      "src": "frontend/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(api/.*)",
+      "destination": "https://lifelensai-api.onrender.com/$1"
+    }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
+}
