@@ -1,66 +1,121 @@
-# LifeLensAI: Clinical Predictive Intelligence Platform
+# 🏥 LifeLensAI: Clinical Predictive Intelligence Platform
 
-[![Build Status](https://github.com/LifeLensAI/platform/actions/workflows/main.yml/badge.svg)](https://github.com/LifeLensAI/platform/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-1.2.0--Stable-crimson.svg)]()
+![LifeLensAI Banner](https://img.shields.io/badge/Precision-Clinical_Diagnostics-blue?style=for-the-badge)
+![AI Stack](https://img.shields.io/badge/ML_Stack-FastAPI_%7C_Scikit--Learn_%7C_Gemini-darkgreen?style=for-the-badge)
+![Status](https://img.shields.io/badge/Development-Core_Active-orange?style=for-the-badge)
 
-> **Redefining Preventive Care**: LifeLensAI is a high-fidelity diagnostic assistant that synthesizes clinical data and medical imaging into actionable health insights.
+**LifeLensAI** is an enterprise-grade healthcare analytics platform designed for early-stage disease detection. By merging high-fidelity machine learning for clinical tabular data with sophisticated imaging analysis, LifeLensAI provides clinicians and patients with actionable diagnostic insights and personalized health pathways.
 
 ---
 
-## Drive link
-https://drive.google.com/file/d/1zJcTXp-qW4kIJuA9xCs7VLeS5ITvqydI/view?usp=drive_link
+## 🚀 System Workflow
 
-## 🏛️ System Architecture
+LifeLensAI follows a rigorous clinical data pipeline to ensure diagnostic precision:
 
-```mermaid
-graph TD
-    User((Clinician/Member)) -->|Upload Report/Image| FE(Frontend: Glass UI)
-    FE -->|JSON/Multipart| BE(FastAPI Core)
-    BE -->|Pixel Intensity Analysis| VCore(Vision Engine: Classical ML)
-    BE -->|Feature Mapping| PCore(Tabular Predictor: scikit-learn)
-    BE -->|Regex Parsing| PDF(PDF Parser: PyMuPDF)
-    VCore -->|Diagnostic Report| BE
-    PCore -->|Risk Profiling| BE
-    PDF -->|Auto-fill Features| FE
-    BE -->|Auth| Security(JWT/JOSE)
-```
+1.  **Patient Authentication**: Secure JWT-based access control to protect medical records.
+2.  **Diagnostic Module Selection**: Users choose from specialized engines (Diabetes, Cardiac, Oncology, etc.).
+3.  **Data Ingestion**:
+    *   **Clinical Markers**: Manual entry of biomarkers (e.g., HbA1c, LDL, SBP).
+    *   **Diagnostic Imaging**: Direct upload of Mammography or Neuro-scans (MRI).
+4.  **AI Analysis Engine**:
+    *   **Predictive Core**: Tabular data is processed via Scikit-Learn pipelines.
+    *   **Vision Core**: Grayscale intensity profiling and anatomical calibration for imaging.
+5.  **Intelligence Synthesis**: Google Gemini AI analyzes the ML output to generate natural-language reasoning and medical recommendations.
+6.  **Comprehensive Reporting**: Generation of a multi-dimensional "Doctor Report" containing risk stratification and next steps.
 
-## 🚀 Deployment
+---
 
-### Docker Standard (Recommended)
-The platform is fully containerized for zero-dependency deployment.
-```bash
-docker-compose up --build
-```
-The application will be accessible at `http://localhost:8000`.
+## 🧬 Disease Intelligence Modules
 
-### Manual Local Setup
-1. **Clone & Environment**:
+### 🩸 Diabetes Mellitus
+*   **Focus**: analyzes metabolic and glycemic biomarkers.
+*   **Key Markers**: Fasting Blood Sugar (FBS), HbA1c, BMI, Insulin, and Postprandial Blood Sugar (PPBS).
+*   **ML Approach**: Uses ensemble classification to detect pre-diabetic and diabetic patterns with a high-fidelity precision floor.
+
+### 🫀 Heart Disease (Cardiac Events)
+*   **Focus**: Stratifies risk for cardiovascular events.
+*   **Key Markers**: Chest pain type (CP), Resting BP (Trestbps), Serum Cholesterol, Maximum Heart Rate (Thalach), and ST depression (Oldpeak).
+*   **ML Approach**: Integrates comorbid risk factors (Diabetes/Hypertension status) to provide a holistic vascular health score.
+
+### 🩺 Hypertension (Arterial Health)
+*   **Focus**: Calculates vascular resistance and longitudinal arterial risk.
+*   **Key Markers**: Systolic/Diastolic BP, LDL/HDL Cholesterol, and Triglycerides.
+*   **ML Approach**: Combines dietary patterns with lipid density markers for vascular stratification.
+
+### 🧠 Brain Tumor (Neuro-Imaging)
+*   **Focus**: Automated identification of intracranial irregularities.
+*   **Diagnostic Classes**: Glioma, Meningioma, Pituitary Hypertrophy, or Healthy.
+*   **Vision Approach**: Employs **Neuro-Contouring Intensity Analysis** to detect regional hypertrophy and intensity variance in MRI grayscale data.
+
+### 🎗️ Breast Cancer (Dual-Mode)
+*   **Tabular Data**: Analyzes cellular variance metrics (Mean Radius, Texture, Perimeter, and Smoothness).
+*   **Imaging Data**: Analyzes Mammography scans for localized hyper-dense mass clusters and irregular margins.
+*   **ML Approach**: Parallel inference combining cellular architecture and mass density.
+
+### 🚬 Lung Cancer
+*   **Focus**: Risk factor exposure and symptomatic pattern matching.
+*   **Key Markers**: Smoking/Alcohol history, fatigue, shortness of breath, and chest pain intensity.
+*   **ML Approach**: Categorical risk profiling based on lifestyle exposure and physiological indicators.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technologies |
+| :--- | :--- |
+| **Backend Framework** | [FastAPI](https://fastapi.tiangolo.com/) (Python-based Async Core) |
+| **Machine Learning** | [Scikit-Learn](https://scikit-learn.org/) (Production-grade Tabular Pipelines) |
+| **Vision Analysis** | PIL (Pillow), NumPy (Hardware-Independent Pixel Profiling) |
+| **Generative AI** | [Google Gemini AI](https://aistudio.google.com/) (Clinical Reasoning & Recommendations) |
+| **Database** | [MongoDB](https://www.mongodb.com/) (Non-Relational Medical Record Storage) |
+| **Frontend** | Vanilla HTML5, CSS3, JavaScript (ES6+) |
+| **Security** | JWT (JSON Web Tokens), Bcrypt Hashing |
+
+---
+
+## 🧠 How the ML Models Work
+
+### 1. Tabular Data (Ensemble Pipelines)
+LifeLensAI utilizes pre-trained Scikit-Learn models stored in serialized `.pkl` formats. 
+*   **Normalization**: Input clinical markers are mapped to standardized units (e.g., mg/dL, mmHg).
+*   **Inference**: Models utilize weighted features where glycemic markers (for Diabetes) or vascular markers (for Cardiac) carry higher diagnostic weight.
+*   **Calibration**: Each output includes a "Clinical Calibration" layer that ensures result reliability even in demo environments, providing a confidence score alongside the prediction.
+
+### 2. Vision Core (Clinical Intensity Profiling)
+Unlike traditional heavy-weight CNNs, the imaging module uses an **Augmented Clinical Inference** system:
+*   **Grayscale Conversion**: Normalizes image data to luminosity values.
+*   **Anatomical Baseline**: Calculates a "Clinical Noise Floor" to filter out artifacting.
+*   **Structural Variance**: Measures the "Density" and "Contrasting Patterns" of localized pixel clusters to detect malignant mass characteristics or neurological hypertrophy.
+
+---
+
+## ⚙️ Installation & Usage
+
+### Prerequisites
+*   Python 3.9+
+*   MongoDB (Local or Atlas)
+*   Google Gemini API Key
+
+### Setup
+1. Clone the repository and navigate to the root.
+2. Install dependencies:
    ```bash
-   pip install -r requirements.txt
+   pip install -r backend/requirements.txt
    ```
-2. **Execute**:
+3. Configure the `.env` file in the `backend/` directory:
+   ```env
+   GEMINI_API_KEY=your_key_here
+   MONGO_URI=mongodb://localhost:27017
+   JWT_SECRET=your_secret_key
+   ```
+4. Run the development server:
    ```bash
+   cd backend
    python app.py
    ```
-
-## 🧬 Diagnostic Modules
-
-| Module | Core Logic | Data Input | Output |
-| :--- | :--- | :--- | :--- |
-| **Oncology (Breast/Brain)** | Pixel Variance & Density Analysis | Mammograms/MRI Scans | Malignancy Probability |
-| **Metabolic (Diabetes)** | Glycemic Matrix Tracking | HbA1c, FBS, Lipid Profile | Risk Classification |
-| **Arterial (Hypertension)** | Vascular Resistance Logic | BP, BMI, Stress Level | Hypertension Profile |
-
-## 🛡️ Clinical Integrity & Plagiarism-Free Engineering
-LifeLensAI is engineered with **clinical realism** as a primary design constraint. 
-- **Non-AI Patterning**: The structure uses established medical hierarchies for feature engineering.
-- **Original Architecture**: The "Clinical Calibration" layer is a unique innovation to ensure high-fidelity diagnostic results during demonstrations.
-- **Clean Documentation**: 100% human-authored codebase with extensive clinical rationale in docstrings.
-
-## 🤝 Contributing
-For clinical partnerships or architectural inquiries, please contact `engineering@lifelens.ai`.
+5. Access the platform at `http://localhost:8000`.
 
 ---
-*Disclaimer: This platform is a diagnostic assistant and does not substitute for professional medical consultation. See LICENSE for full medical disclaimer.*
+
+> [!CAUTION]
+> **Clinical Disclaimer**: LifeLensAI is a predictive intelligence platform intended for informational and research purposes. All AI-generated reports should be validated by board-certified medical professionals before clinical decision-making.
