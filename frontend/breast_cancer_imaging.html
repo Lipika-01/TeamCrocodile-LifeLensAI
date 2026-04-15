@@ -173,7 +173,7 @@
 
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:8000/api/predict/breast-cancer-image', {
+        const response = await fetch('/api/predict/breast-cancer-image', {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` },
           body: formData
