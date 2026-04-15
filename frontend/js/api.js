@@ -1,6 +1,6 @@
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
   ? 'http://localhost:8000/api' 
-  : 'https://lifelensai-api.onrender.com/api'; // Replace with your actual Render URL later
+  : '/api'; // Uses relative path since frontend and backend are served together on Render
 
 function getAuthHeaders() {
   const token = localStorage.getItem('token');
