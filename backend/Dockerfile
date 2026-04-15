@@ -1,7 +1,7 @@
 # LifeLensAI production Dockerfile
 # Optimized for classical ML and FastAPI serving
 
-FROM python:3.9-slim-buster
+FROM python:3.11-slim
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -11,10 +11,10 @@ ENV APP_HOME /app
 # Create and set working directory
 WORKDIR $APP_HOME
 
-# Install system dependencies
+# Install system dependencies (Adding curl for healthchecks)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    libpq-dev \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
